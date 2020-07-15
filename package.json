@@ -1,0 +1,39 @@
+{
+  "name": "booking_calendar",
+  "version": "1.0.0",
+  "description": "React booking calendar.",
+  "main": "index.js",
+  "author": "LOOM",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.10.5"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack",
+    "watch": "webpack --watch --progress"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "IE >= 11",
+              "last 3 versions"
+            ]
+          }
+        }
+      ],
+      "@babel/preset-react"
+    ]
+  }
+}
