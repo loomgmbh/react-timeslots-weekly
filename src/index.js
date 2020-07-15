@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 const Root = () => {return (
-  <>Hi there</>
+  <>findMe</>
 )}
 
-render(<Root/>, document.querySelector('#product-booking-calendar-target'));
+render(<Root/>, document.querySelector('#product-booking-calendar-target'))
