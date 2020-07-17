@@ -6,8 +6,18 @@ import Week from './Week.jsx';
 
 
 const Month = props => {
-  const {weeks, currentDate, initialDate, timeslots, renderDays, timeslotProps, selectedTimeslots, disabledTimeslots, classRoot} = props
-  const classRootModified = `${classRoot}--month`
+  const {
+    weeks, 
+    currentDate, 
+    initialDate, 
+    timeslots, 
+    renderDays, 
+    timeslotProps, 
+    selectedTimeslots, 
+    disabledTimeslots, 
+    classRoot
+  } = props
+  
   const _getStartingWeek = (currentDate, weeks) => {
     // find out staring week:
     const currentDateWithoutTime = currentDate.startOf('day');
@@ -26,19 +36,31 @@ const Month = props => {
 
     return startingWeek;
   }
-
   const [currentWeekIndex, setCurrentWeekIndex] = useState(_getStartingWeek(currentDate, weeks));
+  const classRootModified = `${classRoot}--month`
 
-  const weekProps = {
-    weeks: weeks, 
-    currentWeekIndex: currentWeekIndex,
-    initialDate: initialDate,
-    timeslots: timeslots,
-    renderDays: renderDays
+  const _onPrevWeekClicked = () => {
+    if (currentWeekIndex - 1 >= 0) {
+      setCurrentWeekIndex(currentWeekIndex - 1)
+    }
+    else if (onWeekOutOfMonth) {
+      const firstDayOfPrevWeek = helpers.getMomentFromCalendarJSDateElement(weeks[0][0]).clone().subtract(1, 'days');
+      onWeekOutOfMonth(firstDayOfPrevWeek);
+    }
+  }
+  
+  const _onNextWeekClicked = () => {
+    if (currentWeekIndex + 1 < weeks.length) {
+      setCurrentWeekIndex(currentWeekIndex + 1)
+    }
+    else if (onWeekOutOfMonth) {
+      const lastDay = weeks[currentWeekIndex].length - 1;
+      const firstDayOfNextWeek = helpers.getMomentFromCalendarJSDateElement(weeks[currentWeekIndex][lastDay]).clone().add(1, 'days');
+      onWeekOutOfMonth(firstDayOfNextWeek);
+    }
   }
 
   const _renderActions = props => {
-    const { weeks, currentWeekIndex } = props
     const currentWeek = weeks[currentWeekIndex];
     const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0]);
     const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1]);
@@ -52,7 +74,7 @@ const Month = props => {
         <div className = "tsc-month__action tsc-month__action-title">
           { actionTitle }
         </div>
-        <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--right" onClick = { this._onNextWeekClicked.bind(this) }>
+        <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--right" onClick = { _onNextWeekClicked.bind(this) }>
           &#8250;
         </div>
       </div>
@@ -80,44 +102,6 @@ const Month = props => {
     onTimeslotClick(timeslot);
   }
   
-  /**
-   * Handles prev week button click.
-   */
-  const _onPrevWeekClicked = props => {
-    const {
-      onWeekOutOfMonth,
-      currentWeekIndex,
-      weeks,
-    } = props;
-  
-    if (currentWeekIndex - 1 >= 0) {
-      this.setState({
-        currentWeekIndex: currentWeekIndex - 1,
-      });
-    }
-    else if (onWeekOutOfMonth) {
-      const firstDayOfPrevWeek = helpers.getMomentFromCalendarJSDateElement(weeks[0][0]).clone().subtract(1, 'days');
-      onWeekOutOfMonth(firstDayOfPrevWeek);
-    }
-  }
-  
-  /**
-   * Handles next week button click.
-   */
-  const _onNextWeekClicked = ({currentWeekIndex, weeks, onWeekOutOfMonth}) => {
-  
-    if (currentWeekIndex + 1 < weeks.length) {
-      this.setState({
-        currentWeekIndex: currentWeekIndex + 1,
-      });
-    }
-    else if (onWeekOutOfMonth) {
-      const lastDay = weeks[currentWeekIndex].length - 1;
-      const firstDayOfNextWeek = helpers.getMomentFromCalendarJSDateElement(weeks[currentWeekIndex][lastDay]).clone().add(1, 'days');
-      onWeekOutOfMonth(firstDayOfNextWeek);
-    }
-  }
-  
   const componentWillReceiveProps = (nextProps) => {
     this.setState({
       currentWeekIndex: this._getStartingWeek(nextProps.currentDate, nextProps.weeks),
@@ -126,8 +110,8 @@ const Month = props => {
 
   return (
     <div className = {classRootModified}>
-      {/* _renderActions() */}
-      { _renderWeek(weekProps) }
+      { _renderActions()}
+      { _renderWeek() }
     </div>
   );
 }
