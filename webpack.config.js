@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
  
 const config = {
- entry: './src/index.js',
+ entry: './src/index.jsx',
  devtool: (process.env.NODE_ENV === 'production') ? false : 'inline-source-map',
  mode: (process.env.NODE_ENV === 'production') ? 'production' : 'development',
  output: {
