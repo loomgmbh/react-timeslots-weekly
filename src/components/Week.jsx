@@ -21,9 +21,10 @@ const Week = props => {
     timeslotProps,
     selectedTimeslots,
     disabledTimeslots,
-    renderDays
+    renderDays,
+    classRoot
   } = props
-  
+  const classRootModified = `${classRoot}--week`
   const _renderWeekDays = () => {
     return weekToRender.map((day, index) => {
       let formattedDate = helpers.getMomentFromCalendarJSDateElement(day);
@@ -39,6 +40,7 @@ const Week = props => {
             selectedTimeslots = { selectedTimeslots }
             disabledTimeslots = { disabledTimeslots }
             momentTime = { formattedDate }
+            classRoot = { classRoot }
           />
         );
       }
@@ -46,7 +48,7 @@ const Week = props => {
   }
 
   return (
-    <div className = 'tsc-week'>
+    <div className = {classRootModified}>
       { _renderWeekDays() }
     </div>
   );
@@ -62,6 +64,7 @@ export default Week
  * @type {Array} selectedTimeslots: Selected Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
  * @type {Array} disabledTimeslots: Disabled Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
  * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
+ * @type {String} classRoot: A string to use as css-class root.
  */
 Week.propTypes = {
   weekToRender: PropTypes.array.isRequired,
@@ -72,4 +75,5 @@ Week.propTypes = {
   selectedTimeslots: PropTypes.array,
   disabledTimeslots: PropTypes.array,
   renderDays: PropTypes.object,
+  classRoot: PropTypes.string.isRequired
 };

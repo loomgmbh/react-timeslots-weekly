@@ -6,7 +6,8 @@ import Week from './Week.jsx';
 
 
 const Month = props => {
-  const {weeks, currentDate, initialDate, timeslots, renderDays, timeslotProps, selectedTimeslots, disabledTimeslots} = props
+  const {weeks, currentDate, initialDate, timeslots, renderDays, timeslotProps, selectedTimeslots, disabledTimeslots, classRoot} = props
+  const classRootModified = `${classRoot}--month`
   const _getStartingWeek = (currentDate, weeks) => {
     // find out staring week:
     const currentDateWithoutTime = currentDate.startOf('day');
@@ -42,10 +43,10 @@ const Month = props => {
     const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0]);
     const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1]);
     const actionTitle = `${startDate.format('MMM Do')} - ${endDate.format('MMM Do')}`;
-  
+    const actionClasses = `${classRootModified}__action ${classRootModified}__action-element ${classRootModified}__action-element--left`
     return (
-      <div className = "tsc-month__actions">
-        <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--left" onClick = { this._onPrevWeekClicked.bind(this) }>
+      <div className = {`${classRootModified}__actions`}>
+        <div className = {actionClasses} onClick = { _onPrevWeekClicked.bind(this) }>
           &#8249;
         </div>
         <div className = "tsc-month__action tsc-month__action-title">
@@ -69,6 +70,7 @@ const Month = props => {
         selectedTimeslots = { selectedTimeslots }
         disabledTimeslots = { disabledTimeslots }
         renderDays = { renderDays }
+        classRoot = { classRoot }
       />
     );
   }
@@ -123,7 +125,7 @@ const Month = props => {
   }
 
   return (
-    <div className = "tsc-month">
+    <div className = {classRootModified}>
       {/* _renderActions() */}
       { _renderWeek(weekProps) }
     </div>
@@ -131,7 +133,6 @@ const Month = props => {
 }
 
 export default Month
-
 
 /**
 * @type {Object} currentDate: Base currentDate to get the month from - Usually first day of the month
@@ -144,6 +145,7 @@ export default Month
 * @type {Array} selectedTimeslots: Selected Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
 * @type {Array} DisabledTimeslots: Disabled Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
 * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
+* @type {String} classRoot: A string to use as css-class root.
  */
 Month.propTypes = {
   currentDate: PropTypes.object.isRequired,
@@ -156,4 +158,5 @@ Month.propTypes = {
   selectedTimeslots: PropTypes.array,
   disabledTimeslots: PropTypes.array,
   renderDays: PropTypes.object,
+  classRoot: PropTypes.string.isRequired
 };

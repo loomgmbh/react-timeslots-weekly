@@ -14,12 +14,14 @@ const Timeslot = props => {
     description,
     status,
     customClassNames,
+    classRoot
   } = props;
 
+  const classRootModified = `${classRoot}--timeslot`
   const timeslotClassNames = classnames({
-    'tsc-timeslot': true,
-    'tsc-timeslot--selected': status == SELECTED,
-    'tsc-timeslot--disabled': status == DISABLED,
+    'booking-calendar--timeslot': true,
+    'booking-calendar--timeslot__disabled': status == SELECTED,
+    'booking-calendar--timeslot__selected': status == DISABLED,
   }, customClassNames);
 
   const _onTimeslotClick = (event) => {
@@ -52,6 +54,7 @@ Timeslot.defaultProps = {
  * @type {String} description: The contents to be displayed by the timeslot. Default format will resume to something similar to "7:00 PM - 8:00 PM"
  * @type {String} status: allows the div to change format based on the current status of the element (disabled, selected, default)
  * @type (Function) onClick: Function to be excecuted when clicked.
+ * @type {String} classRoot: A string to use as css-class root.
  */
 Timeslot.propTypes = {
   description: PropTypes.string.isRequired,
@@ -65,4 +68,5 @@ Timeslot.propTypes = {
     PropTypes.string,
     PropTypes.object,
   ]),
+  classRoot: PropTypes.string.isRequired
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import moment from 'moment';
 import Calendar from './components/Calendar.jsx';
+import './styles.scss'
 
 const Root = () => {
   
@@ -12,6 +13,7 @@ const Root = () => {
   return (
     <>
       <Calendar
+        classRoot = 'booking-calendar'
         firstDay = {moment().day("Monday")}
         initialDate = { moment().format() }
         timeslots = { [
@@ -21,7 +23,7 @@ const Root = () => {
         ] }
         timeslotProps = {{
           format: 'H', // Each element in the timeslot array is an Hour
-          showFormat: 'H:mm',
+          showFormat: 'H.mm',
         }}
         startDateInputProps = {startDateInputProps}
         locale = 'de'
