@@ -1,13 +1,18 @@
-import React, {useState} from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
-import helpers from './../util/helpers.js';
-import Week from './Week.jsx';
+import helpers from './../util/helpers';
+import Week from './week.jsx';
 
+export default class Month extends React.Component {
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      currentWeekIndex: this._getStartingWeek(props.currentDate, props.weeks),
+    };
+  }
 
-const Month = props => {
-  const {weeks, currentDate, initialDate, timeslots, renderDays, timeslotProps, selectedTimeslots, disabledTimeslots} = props
-  const _getStartingWeek = (currentDate, weeks) => {
+  _getStartingWeek(currentDate, weeks) {
     // find out staring week:
     const currentDateWithoutTime = currentDate.startOf('day');
     let startingWeek  = 0;
@@ -26,23 +31,30 @@ const Month = props => {
     return startingWeek;
   }
 
-  const [currentWeekIndex, setCurrentWeekIndex] = useState(_getStartingWeek(currentDate, weeks));
+  render() {
 
-  const weekProps = {
-    weeks: weeks, 
-    currentWeekIndex: currentWeekIndex,
-    initialDate: initialDate,
-    timeslots: timeslots,
-    renderDays: renderDays
+    return (
+      <div className = "tsc-month">
+        { this._renderActions() }
+        { this._renderWeek() }
+      </div>
+    );
   }
 
-  const _renderActions = props => {
-    const { weeks, currentWeekIndex } = props
+  _renderActions() {
+    const {
+      weeks,
+    } = this.props;
+
+    const {
+      currentWeekIndex,
+    } = this.state;
+
     const currentWeek = weeks[currentWeekIndex];
     const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0]);
     const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1]);
     const actionTitle = `${startDate.format('MMM Do')} - ${endDate.format('MMM Do')}`;
-  
+
     return (
       <div className = "tsc-month__actions">
         <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--left" onClick = { this._onPrevWeekClicked.bind(this) }>
@@ -57,12 +69,26 @@ const Month = props => {
       </div>
     );
   }
-  
-  const _renderWeek = props => {
+
+  _renderWeek() {
+    const {
+      currentWeekIndex,
+    } = this.state;
+
+    const {
+      weeks,
+      initialDate,
+      timeslots,
+      timeslotProps,
+      selectedTimeslots,
+      disabledTimeslots,
+      renderDays,
+    } = this.props;
+
     return (
       <Week
         weekToRender = { weeks[currentWeekIndex] }
-        onTimeslotClick = { _onTimeslotClick.bind(this) }
+        onTimeslotClick = { this._onTimeslotClick.bind(this) }
         initialDate = { initialDate }
         timeslots = { timeslots }
         timeslotProps = { timeslotProps }
@@ -72,22 +98,28 @@ const Month = props => {
       />
     );
   }
-  
-  const _onTimeslotClick = (timeslot) => {
-    const { onTimeslotClick } = props
+
+  _onTimeslotClick(timeslot) {
+    const {
+      onTimeslotClick,
+    } = this.props;
+
     onTimeslotClick(timeslot);
   }
-  
+
   /**
    * Handles prev week button click.
    */
-  const _onPrevWeekClicked = props => {
+  _onPrevWeekClicked() {
+    const {
+      currentWeekIndex,
+    } = this.state;
+
     const {
       onWeekOutOfMonth,
-      currentWeekIndex,
       weeks,
-    } = props;
-  
+    } = this.props;
+
     if (currentWeekIndex - 1 >= 0) {
       this.setState({
         currentWeekIndex: currentWeekIndex - 1,
@@ -98,12 +130,20 @@ const Month = props => {
       onWeekOutOfMonth(firstDayOfPrevWeek);
     }
   }
-  
+
   /**
    * Handles next week button click.
    */
-  const _onNextWeekClicked = ({currentWeekIndex, weeks, onWeekOutOfMonth}) => {
-  
+  _onNextWeekClicked() {
+    const {
+      currentWeekIndex,
+    } = this.state;
+
+    const {
+      weeks,
+      onWeekOutOfMonth,
+    } = this.props;
+
     if (currentWeekIndex + 1 < weeks.length) {
       this.setState({
         currentWeekIndex: currentWeekIndex + 1,
@@ -115,23 +155,13 @@ const Month = props => {
       onWeekOutOfMonth(firstDayOfNextWeek);
     }
   }
-  
-  const componentWillReceiveProps = (nextProps) => {
+
+  componentWillReceiveProps(nextProps) {
     this.setState({
       currentWeekIndex: this._getStartingWeek(nextProps.currentDate, nextProps.weeks),
     });
   }
-
-  return (
-    <div className = "tsc-month">
-      {/* _renderActions() */}
-      { _renderWeek(weekProps) }
-    </div>
-  );
 }
-
-export default Month
-
 
 /**
 * @type {Object} currentDate: Base currentDate to get the month from - Usually first day of the month

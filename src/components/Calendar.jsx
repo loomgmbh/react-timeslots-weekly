@@ -194,6 +194,16 @@ const Calendar = props => {
   moment.locale(locale);
   const {firstDay, initialDate, timeslots, timeslotProps, locale} = props
 
+  const renderDays = {
+    sunday: true,
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+    saturday: true,
+  }
+
   const renderMonth = () => {
     const [currentDate, setCurrentDate] = useState(moment());
     const [selectedTimeslots, setSelectedTimeslots] = useState([]);
@@ -210,8 +220,8 @@ const Calendar = props => {
         timeslots = { timeslots }
         timeslotProps = { timeslotProps }
         selectedTimeslots = { selectedTimeslots }
-        // disabledTimeslots = { _formatDisabledTimeslots() }
-        // renderDays = { renderDays }
+        disabledTimeslots = { [] }
+        renderDays = { renderDays }
       />
     );
   }
@@ -222,7 +232,6 @@ const Calendar = props => {
       {/* this._renderActions() }
       { this._renderMonth() }
       { this._renderInputs() */ }
-      test
     </div>
   );
 }

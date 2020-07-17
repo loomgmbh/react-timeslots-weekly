@@ -1,30 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import helpers from './../util/helpers';
-import Day from './Day.jsx';
+import Day from './day.jsx';
 
+export default class Week extends React.Component {
+  render() {
 
-const _onTimeslotClick = (timeslot) => {
-  const {
-    onTimeslotClick,
-  } = this.props;
+    return (
+      <div className = 'tsc-week'>
+        { this._renderWeekDays() }
+      </div>
+    );
+  }
 
-  onTimeslotClick(timeslot);
-}
+  _renderWeekDays() {
+    const {
+      weekToRender,
+      initialDate,
+      timeslots,
+      timeslotProps,
+      selectedTimeslots,
+      disabledTimeslots,
+      renderDays,
+    } = this.props;
 
-const Week = props => {
-  const {
-    weekToRender,
-    onTimeslotClick,
-    initialDate,
-    timeslots,
-    timeslotProps,
-    selectedTimeslots,
-    disabledTimeslots,
-    renderDays
-  } = props
-  
-  const _renderWeekDays = () => {
     return weekToRender.map((day, index) => {
       let formattedDate = helpers.getMomentFromCalendarJSDateElement(day);
       const weekDay = formattedDate.format('dddd').toLowerCase();
@@ -32,26 +31,27 @@ const Week = props => {
         return (
           <Day
             key = { index }
-            onTimeslotClick = { _onTimeslotClick.bind(this) }
+            onTimeslotClick = { this._onTimeslotClick.bind(this) }
             initialDate = { initialDate }
             timeslots = { timeslots }
             timeslotProps = { timeslotProps }
             selectedTimeslots = { selectedTimeslots }
             disabledTimeslots = { disabledTimeslots }
             momentTime = { formattedDate }
-          />
+            />
         );
       }
     });
   }
 
-  return (
-    <div className = 'tsc-week'>
-      { _renderWeekDays() }
-    </div>
-  );
+  _onTimeslotClick(timeslot) {
+    const {
+      onTimeslotClick,
+    } = this.props;
+
+    onTimeslotClick(timeslot);
+  }
 }
-export default Week
 
 /**
  * @type {Array} weekToRender: Week to render. Each day should also have the requested timeslots, unless default configuration is desired.

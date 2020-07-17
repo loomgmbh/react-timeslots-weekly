@@ -8,21 +8,28 @@ import {
   DISABLED,
 } from '../constants/timeslot.js';
 
-const Timeslot = props => {
+export default class Timeslot extends React.Component {
+  render() {
+    const {
+      description,
+      status,
+      customClassNames,
+    } = this.props;
 
-  const {
-    description,
-    status,
-    customClassNames,
-  } = props;
+    const timeslotClassNames = classnames({
+      'tsc-timeslot': true,
+      'tsc-timeslot--selected': status == SELECTED,
+      'tsc-timeslot--disabled': status == DISABLED,
+    }, customClassNames);
 
-  const timeslotClassNames = classnames({
-    'tsc-timeslot': true,
-    'tsc-timeslot--selected': status == SELECTED,
-    'tsc-timeslot--disabled': status == DISABLED,
-  }, customClassNames);
+    return (
+      <div className = { timeslotClassNames } onClick = { this._onTimeslotClick.bind(this) }>
+        { description }
+      </div>
+    );
+  }
 
-  const _onTimeslotClick = (event) => {
+  _onTimeslotClick(event) {
     event.preventDefault();
     const {
       status,
@@ -33,16 +40,7 @@ const Timeslot = props => {
       onClick();
     }
   }
-
-  return (
-    <div className = { timeslotClassNames } onClick = { _onTimeslotClick.bind(this) }>
-      { description }
-    </div>
-  );
-
 }
-
-export default Timeslot
 
 Timeslot.defaultProps = {
   status: DEFAULT,

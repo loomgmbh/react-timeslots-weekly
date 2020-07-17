@@ -20,7 +20,7 @@ const Root = () => {
             ['18'],
         ] }
         timeslotProps = {{
-          // format: 'H', // Each element in the timeslot array is an Hour
+          format: 'H', // Each element in the timeslot array is an Hour
           showFormat: 'H:mm',
         }}
         startDateInputProps = {startDateInputProps}

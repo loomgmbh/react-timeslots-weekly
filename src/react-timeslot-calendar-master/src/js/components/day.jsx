@@ -15,33 +15,44 @@ import {
   SELECTED,
 } from '../constants/timeslot.js';
 
+export default class Day extends React.Component {
 
-const Day = props => {
-  const {
-    timeslots,
-    timeslotProps,
-    selectedTimeslots,
-    disabledTimeslots,
-    timeslotFormat,
-    timeslotShowFormat,
-    onTimeslotClick,
-    renderTitle,
-    momentTime,
-    initialDate
+  render() {
+    const dayClassNames = classnames({
+      'tsc-day': true,
+    });
 
-  } = props
-  console.log(selectedTimeslots)
+    return (
+      <div className = { dayClassNames }>
+        { this._renderTitle() }
+        { this._renderTimeSlots() }
+      </div>
+    );
+  }
 
-  const _renderTitle = () => {
+  _renderTitle() {
+    const {
+      renderTitle,
+      momentTime,
+    } = this.props;
+
     return (
       <div className = "tsc-day__title">
         <span>{renderTitle(momentTime)}</span>
       </div>
     );
   }
-  
-  const _renderTimeSlots = () => {
-    
+
+  _renderTimeSlots() {
+    const {
+      timeslots,
+      timeslotProps,
+      selectedTimeslots,
+      disabledTimeslots,
+      momentTime,
+      initialDate,
+    } = this.props;
+
     return timeslots.map((slot, index) => {
       let description = '';
       for (let i = 0; i < slot.length; i ++){
@@ -54,71 +65,56 @@ const Day = props => {
         startDate: momentTime.clone().add(slot[0], timeslotProps.format),
         endDate: momentTime.clone().add(slot[slot.length - 1], timeslotProps.format),
       };
-  
+
       let status = DEFAULT;
       if (timeslotDates.startDate.isBefore(initialDate) || timeslotDates.startDate.isSame(initialDate)) {
         status = DISABLED;
       }
-  
+
       const isSelected = selectedTimeslots.some((selectedTimeslot) => {
         return timeslotDates.startDate.format() === selectedTimeslot.startDate.format();
       });
-  
+
       const isDisabled = disabledTimeslots.some((disabledTimeslot) => {
         return disabledTimeslot.startDate.isBetween(timeslotDates.startDate, timeslotDates.endDate, null, '[)') ||
                disabledTimeslot.endDate.isBetween(timeslotDates.startDate, timeslotDates.endDate, null, '(]');
       });
-  
+
       if (isDisabled) {
         status = DISABLED;
       }
       else if (isSelected) {
         status = SELECTED;
       }
-  
-  
+
+
       return (
         <Timeslot
           key = { index }
           description = { description }
-          onClick = { _onTimeslotClick.bind(this, index) }
+          onClick = { this._onTimeslotClick.bind(this, index) }
           status = { status }
         />
       );
     });
   }
-  
-  const _onTimeslotClick = props => {
+
+  _onTimeslotClick(index) {
     const {
-      index,
       timeslots,
       timeslotFormat,
       momentTime,
       onTimeslotClick,
-    } = props;
-  
+    } = this.props;
+
     const timeslot = {
       startDate: momentTime.clone().add(timeslots[index][0], timeslotFormat),
       endDate: momentTime.clone().add(timeslots[index][1], timeslotFormat),
     };
-  
+
     onTimeslotClick(timeslot);
   }
-
-  const dayClassNames = classnames({
-    'tsc-day': true,
-  });
-
-  return (
-    <div className = { dayClassNames }>
-      { _renderTitle() }
-      { _renderTimeSlots() }
-    </div>
-  );
-
 }
-
-export default Day
 
 Day.defaultProps = {
   timeslotFormat: DEFAULT_TIMESLOT_FORMAT,
