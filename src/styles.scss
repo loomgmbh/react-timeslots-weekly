@@ -1,5 +1,5 @@
 body {
-  background-color: pink;
+  background-color: #cccccc;
 }
 
 .booking-calendar {
@@ -11,5 +11,18 @@ body {
 
   &--day {
     padding: 10px;
+  }
+
+  &--day-title {
+    padding: 10px;
+  }
+
+  &--timeslot {
+    padding: 20px;
+    border: 1px solid #000000;
+
+    + .booking-calendar--timeslot {
+      margin-top: 20px;
+    }
   }
 }

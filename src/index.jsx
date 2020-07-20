@@ -14,7 +14,7 @@ const Root = () => {
     <>
       <Calendar
         classRoot = 'booking-calendar'
-        firstDay = {moment().day("Monday")}
+        firstDay = 'monday'
         initialDate = { moment().format() }
         timeslots = { [
             ['9', '10'],

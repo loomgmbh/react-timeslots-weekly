@@ -55,13 +55,13 @@ const _renderInputs = () => {
   });
 }
 
-const _onWeekOutOfMonth = (updateDate) => {
-  this.setState({
-    currentDate: updateDate,
-  });
+// const _onWeekOutOfMonth = (updateDate) => {
+//   this.setState({
+//     currentDate: updateDate,
+//   });
 
-  return;
-}
+//   return;
+// }
 
 const _onGoToNextMonth = () => {
   const {
@@ -185,4 +185,6 @@ const _updateRenderDays = (renderDays) => {
   this.renderDays = Object.assign({}, defaultRenderDays, renderDays);
 }
 
-export {_renderActions, _renderInputs, _onWeekOutOfMonth, _onGoToNextMonth, _formatDisabledTimeslots, _onGoToPrevMonth, _onTimeslotClick, _updateInputProps, _updateTimeslotProps, _updateRenderDays}
+export {_renderActions, _renderInputs, 
+  // _onWeekOutOfMonth, 
+  _onGoToNextMonth, _formatDisabledTimeslots, _onGoToPrevMonth, _onTimeslotClick, _updateInputProps, _updateTimeslotProps, _updateRenderDays}

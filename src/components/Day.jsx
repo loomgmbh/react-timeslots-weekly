@@ -28,13 +28,14 @@ const Day = props => {
     renderTitle,
     momentTime,
     initialDate,
-    classRoot
+    classRoot,
+    locale
   } = props
   const classRootModified = `${classRoot}--day`
 
   const _renderTitle = () => {
     return (
-      <div className = "tsc-day__title">
+      <div className = {`${classRoot}--day-title`}>
         <span>{renderTitle(momentTime)}</span>
       </div>
     );
@@ -84,6 +85,7 @@ const Day = props => {
           onClick = { _onTimeslotClick.bind(this, index) }
           status = { status }
           classRoot = { classRoot }
+          locale = { locale }
         />
       );
     });
@@ -140,8 +142,9 @@ Day.defaultProps = {
  * @type {Function} onTimeslotClick: Function to be excecuted when clicked.
  * @type {Function} renderTitle: Function to be used when rendering the title.
  * @type {Object} momentTime: MomentJS datetime object.
- * @type {Ojbect} initialDate: Moment JS Date used to initialize the Calendar and which progresses further into the tree.
+ * @type {Object} initialDate: Moment JS Date used to initialize the Calendar and which progresses further into the tree.
  * @type {String} classRoot: A string to use as css-class root.
+ * @type {String} locale: country language code.
  */
 Day.propTypes = {
   timeslots: PropTypes.array.isRequired,
@@ -154,5 +157,6 @@ Day.propTypes = {
   renderTitle: PropTypes.func.isRequired,
   momentTime: PropTypes.object.isRequired,
   initialDate: PropTypes.object.isRequired,
-  classRoot: PropTypes.string.isRequired
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };

@@ -3,20 +3,22 @@ import PropTypes from 'prop-types';
 import helpers from './../util/helpers.js';
 import Week from './Week.jsx';
 
-
-
 const Month = props => {
   const {
     weeks, 
     currentDate, 
     initialDate, 
     timeslots, 
-    renderDays, 
+    renderDays,
+    onWeekOutOfMonth,
     timeslotProps, 
     selectedTimeslots, 
     disabledTimeslots, 
-    classRoot
+    classRoot,
+    locale
   } = props
+
+  // console.log(onWeekOutOfMonth)
   
   const _getStartingWeek = (currentDate, weeks) => {
     // find out staring week:
@@ -54,6 +56,8 @@ const Month = props => {
       setCurrentWeekIndex(currentWeekIndex + 1)
     }
     else if (onWeekOutOfMonth) {
+    // else {
+      // setCurrentWeekIndex(0)
       const lastDay = weeks[currentWeekIndex].length - 1;
       const firstDayOfNextWeek = helpers.getMomentFromCalendarJSDateElement(weeks[currentWeekIndex][lastDay]).clone().add(1, 'days');
       onWeekOutOfMonth(firstDayOfNextWeek);
@@ -61,20 +65,28 @@ const Month = props => {
   }
 
   const _renderActions = props => {
+    console.log(weeks, currentWeekIndex)
     const currentWeek = weeks[currentWeekIndex];
-    const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0]);
-    const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1]);
-    const actionTitle = `${startDate.format('MMM Do')} - ${endDate.format('MMM Do')}`;
+    const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0], locale);
+    const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1], locale);
+    const actionTitle = `${startDate.local('de').format('D. MMMM')} - ${endDate.format('D. MMMM')} ${endDate.format('Y')}`;
     const actionClasses = `${classRootModified}__action ${classRootModified}__action-element ${classRootModified}__action-element--left`
+    const nextClasses = `${classRootModified}__action ${classRootModified}__action-element ${classRootModified}__action-element--right`
     return (
       <div className = {`${classRootModified}__actions`}>
-        <div className = {actionClasses} onClick = { _onPrevWeekClicked.bind(this) }>
+        <div 
+          className = {actionClasses} 
+          onClick = { _onPrevWeekClicked.bind(this)
+        }>
           &#8249;
         </div>
-        <div className = "tsc-month__action tsc-month__action-title">
+        <div className = {`${classRootModified}__action ${classRootModified}__action-title`}>
           { actionTitle }
         </div>
-        <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--right" onClick = { _onNextWeekClicked.bind(this) }>
+        <div 
+          className = {nextClasses}
+          onClick = { () => _onNextWeekClicked() }
+        >
           &#8250;
         </div>
       </div>
@@ -91,8 +103,9 @@ const Month = props => {
         timeslotProps = { timeslotProps }
         selectedTimeslots = { selectedTimeslots }
         disabledTimeslots = { disabledTimeslots }
-        renderDays = { renderDays }
+        // renderDays = { renderDays }
         classRoot = { classRoot }
+        locale = { locale }
       />
     );
   }
@@ -130,6 +143,7 @@ export default Month
 * @type {Array} DisabledTimeslots: Disabled Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
 * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
 * @type {String} classRoot: A string to use as css-class root.
+* @type {String} locale: country language code.
  */
 Month.propTypes = {
   currentDate: PropTypes.object.isRequired,
@@ -141,6 +155,7 @@ Month.propTypes = {
   timeslotProps: PropTypes.object,
   selectedTimeslots: PropTypes.array,
   disabledTimeslots: PropTypes.array,
-  renderDays: PropTypes.object,
-  classRoot: PropTypes.string.isRequired
+  // renderDays: PropTypes.object,
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };

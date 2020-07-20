@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "dev": "webpack-dev-server --mode development",
+    "dev": "webpack-dev-server --open --mode development",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "babel": {

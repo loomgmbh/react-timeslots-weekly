@@ -7,18 +7,8 @@ import * as monthHelper from './../util/monthHelper.jsx'
 import { render } from 'react-dom';
   
 const Calendar = props => {
-  moment.locale(locale);
-  const {firstDay, initialDate, timeslots, timeslotProps, locale, classRoot} = props
 
-  const renderDays = {
-    sunday: true,
-    monday: true,
-    tuesday: true,
-    wednesday: true,
-    thursday: true,
-    friday: true,
-    saturday: true,
-  }
+  const {firstDay, initialDate, timeslots, timeslotProps, locale, classRoot} = props
 
   const renderMonth = () => {
     const [currentDate, setCurrentDate] = useState(moment());
@@ -31,14 +21,14 @@ const Calendar = props => {
         currentDate = { currentDate }
         initialDate = { moment(initialDate) }
         weeks = { weeks }
-        onWeekOutOfMonth = { monthHelper._onWeekOutOfMonth.bind(this) }
+        onWeekOutOfMonth = { setCurrentDate }
         onTimeslotClick = { monthHelper._onTimeslotClick.bind(this) }
         timeslots = { timeslots }
         timeslotProps = { timeslotProps }
         selectedTimeslots = { selectedTimeslots }
         disabledTimeslots = { [] }
-        renderDays = { renderDays }
         classRoot = { classRoot }
+        locale = { locale }
       />
     );
   }
@@ -63,6 +53,7 @@ Calendar.defaultProps = {
   },
   startDateInputProps: {},
   endDateInputProps: {},
+  locale: 'en'
 };
 
 /**
@@ -72,10 +63,11 @@ Calendar.defaultProps = {
  * @type {Array} selectedTimeslots: Initial value for selected timeslot inputs. Expects Dates formatted as Strings.
  * @type {Array} disabledTimeslots: Initial value for selected timeslot inputs. Expects Dates formatted as Strings.
  * @type {Integer} maxTimexlots: maximum ammount of timeslots to select.
- * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
+//  * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
  * @type {Object} startDateInputProps: properties for the startDate Inputs. Includes name, class, type (hidden, text...)
  * @type {Object} endDateInputProps: properties for the endDate Inputs. Includes name, class, type (hidden, text...)
  * @type {String} classRoot: A string to use as css-class root.
+ * @type {String} locale: country language code.
  */
 Calendar.propTypes = {
   initialDate: PropTypes.string.isRequired,
@@ -84,9 +76,10 @@ Calendar.propTypes = {
   selectedTimeslots: PropTypes.array,
   disabledTimeslots: PropTypes.array,
   maxTimeslots: PropTypes.number,
-  renderDays: PropTypes.object,
+  // renderDays: PropTypes.object,
   startDateInputProps: PropTypes.object,
   endDateInputProps: PropTypes.object,
   onSelectTimeslot: PropTypes.func,
-  classRoot: PropTypes.string.isRequired
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };

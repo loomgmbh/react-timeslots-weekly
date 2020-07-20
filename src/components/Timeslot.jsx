@@ -14,7 +14,8 @@ const Timeslot = props => {
     description,
     status,
     customClassNames,
-    classRoot
+    classRoot,
+    locale
   } = props;
 
   const classRootModified = `${classRoot}--timeslot`
@@ -55,6 +56,7 @@ Timeslot.defaultProps = {
  * @type {String} status: allows the div to change format based on the current status of the element (disabled, selected, default)
  * @type (Function) onClick: Function to be excecuted when clicked.
  * @type {String} classRoot: A string to use as css-class root.
+ * @type {String} locale: country language code.
  */
 Timeslot.propTypes = {
   description: PropTypes.string.isRequired,
@@ -68,5 +70,6 @@ Timeslot.propTypes = {
     PropTypes.string,
     PropTypes.object,
   ]),
-  classRoot: PropTypes.string.isRequired
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };
