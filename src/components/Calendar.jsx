@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import CalendarJS from 'calendarjs';
+// import CalendarJS from 'calendarjs';
 import Month from './Month.jsx';
 import * as monthHelper from './../util/monthHelper.jsx'
 import { render } from 'react-dom';
   
 const Calendar = props => {
 
-  const {firstDay, initialDate, timeslots, timeslotProps, locale, classRoot} = props
+  const {initialDate, timeslots, timeslotProps, locale, classRoot} = props
 
   const renderMonth = () => {
-    const [currentDate, setCurrentDate] = useState(moment());
+    const [currentDate, setCurrentDate] = useState(moment())
+    // const currentDate = moment();
+    const [firstDay, setFirstDay] = useState(moment());
     const [selectedTimeslots, setSelectedTimeslots] = useState([]);
     const { timeslots, initialDate } = props
-    const cal = new CalendarJS(currentDate.year(), currentDate.month() + 1);
-    const weeks = cal.generate();
     return (
       <Month
         currentDate = { currentDate }
         initialDate = { moment(initialDate) }
-        weeks = { weeks }
+        // weeks = { weeks }
         onWeekOutOfMonth = { setCurrentDate }
         onTimeslotClick = { monthHelper._onTimeslotClick.bind(this) }
         timeslots = { timeslots }
