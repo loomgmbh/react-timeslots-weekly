@@ -9,8 +9,10 @@ const Week = props => {
     dayTitleStartProps,
     dayTitleEndProps,
     slots,
-    setSlots,
     slotTimeFormat,
+    selectedSlots,
+    setSelectedSlots,
+    handleSlotClick,
     classRoot
   } = props
 
@@ -27,12 +29,15 @@ const Week = props => {
             dayTitleStartProps = {dayTitleStartProps}
             dayTitleEndProps = {dayTitleEndProps}
             daySlots={daySlots}
-            setSlots={setSlots}
+            selectedSlots={selectedSlots}
+            setSelectedSlots={setSelectedSlots}
             slotTimeFormat={slotTimeFormat}
+            handleSlotClick={handleSlotClick}
             classRoot = {classRoot}
           />
         )
       })}
+      
     </div>
   );
 }

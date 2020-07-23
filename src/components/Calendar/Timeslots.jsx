@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import util from './utility.js'
+import React, { useState } from 'react'
+import Timeslot from './Timeslot.jsx'
+import PropTypes from 'prop-types'
 
 const Timeslots = props => {
   const {
     daySlots,
-    setSlots,
     slotTimeFormat,
+    selectedSlots,
+    setSelectedSlots,
+    handleSlotClick,
     classRoot,
   } = props
 
-  const classRootMod = `${classRoot}--dayslots`
+  const classRootMod = `${classRoot}--timeslots`
+  const id = `${classRoot}--timeslot`
 
   return (
     <div className={classRootMod}>
-      {daySlots.map(slot => {
-        // console.log(slot)
-        if (typeof slot['start'] !== 'undefined') {
-          const start = util.getDate(slot['start']);
-          const classRootModInner = `${classRoot}--button`
-          const buttonClasses = `btn btn--${classRoot}-slot`
-          const startTime = start.format(slotTimeFormat)
-          return (
-            <div className={classRootModInner} key={slot['start']}>
-            <button className={buttonClasses}>
-              {startTime}
-            </button>
-            </div>
-          )
-        }
+      {daySlots.map((slot, index) => {     
+        return (
+          <Timeslot
+            key={`${id}-${index}`}
+            slot={slot}
+            slotTimeFormat={slotTimeFormat}
+            selectedSlots={selectedSlots}
+            setSelectedSlots={setSelectedSlots}
+            handleSlotClick={handleSlotClick}
+            classRoot={classRoot}
+          />
+        )
       })}
     </div>
   )

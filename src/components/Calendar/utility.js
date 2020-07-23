@@ -48,14 +48,25 @@ util.getSlotsUrl = (id) => {
 
 util.getSlotsForDay = (day, slots) => {
   const index = day.format('Y-MM-DD')
-  // console.log(slots['Y-MM-DD'])
   if (!slots) return
   return slots[index] ?? null
 }
 
-util.setSlots = (slots, setSlots) => {
+util.updateSlots = (selected, value, selectedSlots, setSelectedSlots) => {
+  if (selected) {
+    selectedSlots[value] = {
+      start: value,
+      end: '@todo',
+      duration: '@todo',
+    }
+  }
+  else {
+    delete selectedSlots[value]
+  }
+  const newSelected = selectedSlots
+  setSelectedSlots(newSelected)
   
-  setSlots(slots)
+  console.log(selectedSlots)
 }
 
 util.getSlots = (id, startDateObj, endDateObj) => {
@@ -85,4 +96,6 @@ util.getSlots = (id, startDateObj, endDateObj) => {
   }
 }
   
-// }
+util.isSlotSelected = (id, selectedSlots) => {
+  return typeof selectedSlots[id] != 'undefined'
+}

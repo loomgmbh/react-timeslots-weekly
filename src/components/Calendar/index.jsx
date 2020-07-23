@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import Header from './Header.jsx'
 import Controls from './Controls.jsx'
 import Week from './Week.jsx'
+import Footer from './Footer.jsx'
 import { useAsyncTask, useAsyncRun } from 'react-hooks-async';
 import util from './utility.js'
   
 const Booking = props => {
   const {
     classRoot, 
-    firstDay, 
     initialDate, 
-    timeslotProps, 
     dateTitleStartProps,
     dateTitleEndProps,
     dayTitleStartProps,
@@ -30,17 +29,38 @@ const Booking = props => {
   
   const [, setSlots] = useState([])
   const slotsData = util.getSlots(id, startDay, endDay)
+
+  const [selectedSlots, setSelectedSlots] = useState([])
+
+  const handleSlotClick = (date, selected) => {
+    if (selected) {
+      selectedSlots[date] = {
+        start: date,
+        end: '@todo',
+        duration: '@todo',
+      }
+    }
+    else {
+      delete selectedSlots[date]
+    }
+    // const newSelected = selectedSlots
+    setSelectedSlots(selectedSlots)
+    
+    console.log(selectedSlots)
+  }
+
+  console.log(selectedSlots)
+  console.log(selectedSlots.length)
   
   return (
     <div className = {classRoot}>
       <Header
-        days = {days}
-        weekNumber = {weekNumber}
-        startDay = {startDay}
-        endDay = {endDay}
-        dateTitleStartProps = {dateTitleStartProps}
-        dateTitleEndProps = {dateTitleEndProps}
-        classRoot = {classRoot}
+        weekNumber={weekNumber}
+        startDay={startDay}
+        endDay={endDay}
+        dateTitleStartProps={dateTitleStartProps}
+        dateTitleEndProps={dateTitleEndProps}
+        classRoot={classRoot}
       />
       <Controls
         weekNumber={weekNumber}
@@ -55,12 +75,19 @@ const Booking = props => {
       />
       <Week 
         days={days} 
-        classRoot={classRoot} 
         dayTitleStartProps={dayTitleStartProps}
         dayTitleEndProps={dayTitleEndProps}
         slots={slotsData}
         setSlots={setSlots}
         slotTimeFormat={slotTimeFormat}
+        selectedSlots={selectedSlots}
+        setSelectedSlots={setSelectedSlots}
+        handleSlotClick={handleSlotClick}
+        classRoot={classRoot}
+      />
+      <Footer
+        selectedSlots = {selectedSlots}
+        classRoot = {classRoot}
       />
     </div>
   );

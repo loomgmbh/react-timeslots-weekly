@@ -42,7 +42,7 @@ const Root = () => {
         dateTitleEndProps = {'D. MMMM Y'}
         dayTitleStartProps = {'dd'}
         dayTitleEndProps = {'D.'}
-        slotTimeFormat = {'h.mm'}
+        slotTimeFormat = {'H.mm'}
         locale = 'de'
       />
     </>

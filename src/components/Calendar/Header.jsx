@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import CalendarJS from 'calendarjs'
-import Calendar from 'react-calendar';
-import * as util from './utility.js'
-
+import React from 'react';
 
 const Title = props => {
   const {
-    days, 
     weekNumber, 
     startDay, 
     endDay, 
@@ -19,9 +12,11 @@ const Title = props => {
     
   const classRootMod = `${classRoot}--title`
   return (
-    <div className = {classRootMod}>
-      <h4>KW: {weekNumber}</h4>
-      <h4>{startDay.format(dateTitleStartProps)} {endDay.format(dateTitleEndProps)}</h4>
+    <div className={classRootMod}>
+      <h4>
+        <span>KW: {weekNumber}, </span>  
+        <span>{startDay.format(dateTitleStartProps)} {endDay.format(dateTitleEndProps)}</span>
+      </h4>
     </div>
   );
 }

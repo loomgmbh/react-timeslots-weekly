@@ -6,12 +6,14 @@ import util from './utility.js'
 const Day = props => {
   const {
     dateObj, 
-    classRoot,
     dayTitleStartProps,
     dayTitleEndProps,
     daySlots,
-    setSlots,
-    slotTimeFormat
+    selectedSlots,
+    setSelectedSlots,
+    slotTimeFormat,
+    handleSlotClick,
+    classRoot,
   } = props
 
   const classRootMod = `${classRoot}--day`
@@ -19,12 +21,14 @@ const Day = props => {
   const renderSlots = (daySlots) => {
     if (!daySlots || daySlots.length == 0) return
     return (
-      <div className={`${classRootMod}-timeslots`}>
-        <Timeslots 
-          daySlots={daySlots}
-          slotTimeFormat={slotTimeFormat}
-        />
-      </div>
+      <Timeslots 
+        daySlots={daySlots}
+        slotTimeFormat={slotTimeFormat}
+        selectedSlots={selectedSlots}
+        setSelectedSlots={setSelectedSlots}
+        handleSlotClick={handleSlotClick}
+        classRoot={classRoot}
+      />
     )
   }
 

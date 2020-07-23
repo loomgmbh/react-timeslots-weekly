@@ -13,16 +13,24 @@ body {
     padding: 10px;
   }
 
-  &--day-title {
+  &--day-title,
+  &--day-timeslots {
     padding: 10px;
   }
 
   &--timeslot {
-    padding: 20px;
-    border: 1px solid #000000;
+    button {
+      width: 100%;
+      padding: 20px;
+      border: 1px solid #000000;
+
+      &.btn--selected {
+        background-color: yellow;
+      }
+    }
 
     + .booking-calendar--timeslot {
-      margin-top: 20px;
+      margin-top: 10px;
     }
   }
 }
