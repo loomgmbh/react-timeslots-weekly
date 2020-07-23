@@ -1,1 +1,4 @@
+# distro files
 node_modules
+
+.env

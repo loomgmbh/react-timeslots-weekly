@@ -15,44 +15,34 @@ import {
   SELECTED,
 } from '../constants/timeslot.js';
 
-export default class Day extends React.Component {
 
-  render() {
-    const dayClassNames = classnames({
-      'tsc-day': true,
-    });
+const Day = props => {
+  const {
+    timeslots,
+    timeslotProps,
+    selectedTimeslots,
+    disabledTimeslots,
+    timeslotFormat,
+    timeslotShowFormat,
+    onTimeslotClick,
+    renderTitle,
+    momentTime,
+    initialDate,
+    classRoot,
+    locale
+  } = props
+  const classRootModified = `${classRoot}--day`
 
+  const _renderTitle = () => {
     return (
-      <div className = { dayClassNames }>
-        { this._renderTitle() }
-        { this._renderTimeSlots() }
-      </div>
-    );
-  }
-
-  _renderTitle() {
-    const {
-      renderTitle,
-      momentTime,
-    } = this.props;
-
-    return (
-      <div className = "tsc-day__title">
+      <div className = {`${classRoot}--day-title`}>
         <span>{renderTitle(momentTime)}</span>
       </div>
     );
   }
-
-  _renderTimeSlots() {
-    const {
-      timeslots,
-      timeslotProps,
-      selectedTimeslots,
-      disabledTimeslots,
-      momentTime,
-      initialDate,
-    } = this.props;
-
+  
+  const _renderTimeSlots = () => {
+    
     return timeslots.map((slot, index) => {
       let description = '';
       for (let i = 0; i < slot.length; i ++){
@@ -65,56 +55,74 @@ export default class Day extends React.Component {
         startDate: momentTime.clone().add(slot[0], timeslotProps.format),
         endDate: momentTime.clone().add(slot[slot.length - 1], timeslotProps.format),
       };
-
+  
       let status = DEFAULT;
       if (timeslotDates.startDate.isBefore(initialDate) || timeslotDates.startDate.isSame(initialDate)) {
         status = DISABLED;
       }
-
+  
       const isSelected = selectedTimeslots.some((selectedTimeslot) => {
         return timeslotDates.startDate.format() === selectedTimeslot.startDate.format();
       });
-
+  
       const isDisabled = disabledTimeslots.some((disabledTimeslot) => {
         return disabledTimeslot.startDate.isBetween(timeslotDates.startDate, timeslotDates.endDate, null, '[)') ||
                disabledTimeslot.endDate.isBetween(timeslotDates.startDate, timeslotDates.endDate, null, '(]');
       });
-
+  
       if (isDisabled) {
         status = DISABLED;
       }
       else if (isSelected) {
         status = SELECTED;
       }
-
-
+  
+  
       return (
         <Timeslot
           key = { index }
           description = { description }
-          onClick = { this._onTimeslotClick.bind(this, index) }
+          onClick = { _onTimeslotClick.bind(this, index) }
           status = { status }
+          classRoot = { classRoot }
+          locale = { locale }
         />
       );
     });
   }
-
-  _onTimeslotClick(index) {
+  
+  const _onTimeslotClick = props => {
     const {
+      index,
       timeslots,
       timeslotFormat,
       momentTime,
       onTimeslotClick,
-    } = this.props;
-
+    } = props;
+  
     const timeslot = {
       startDate: momentTime.clone().add(timeslots[index][0], timeslotFormat),
       endDate: momentTime.clone().add(timeslots[index][1], timeslotFormat),
     };
-
+  
     onTimeslotClick(timeslot);
   }
+
+  /*@todo: how to use classname effectively */
+  const dayClassNames = classnames({
+    'class-root': true,
+  });
+
+  return (
+    <div className = { classRootModified }>
+      { _renderTitle() }
+      { _renderTimeSlots() }
+    </div>
+  );
+
 }
+
+export default Day
 
 Day.defaultProps = {
   timeslotFormat: DEFAULT_TIMESLOT_FORMAT,
@@ -134,7 +142,9 @@ Day.defaultProps = {
  * @type {Function} onTimeslotClick: Function to be excecuted when clicked.
  * @type {Function} renderTitle: Function to be used when rendering the title.
  * @type {Object} momentTime: MomentJS datetime object.
- * @type {Ojbect} initialDate: Moment JS Date used to initialize the Calendar and which progresses further into the tree.
+ * @type {Object} initialDate: Moment JS Date used to initialize the Calendar and which progresses further into the tree.
+ * @type {String} classRoot: A string to use as css-class root.
+ * @type {String} locale: country language code.
  */
 Day.propTypes = {
   timeslots: PropTypes.array.isRequired,
@@ -147,4 +157,6 @@ Day.propTypes = {
   renderTitle: PropTypes.func.isRequired,
   momentTime: PropTypes.object.isRequired,
   initialDate: PropTypes.object.isRequired,
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };

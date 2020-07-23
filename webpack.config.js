@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require("dotenv-webpack")
 const HtmlWebPackPlugin = require("html-webpack-plugin");
  
 const config = {
@@ -25,6 +26,10 @@ const config = {
           loader: "html-loader"
         }
       ]
+    },
+    {
+      test:/\.s?css$/,
+      use:['style-loader','css-loader', 'sass-loader']
     }
     ]
   },
@@ -32,7 +37,8 @@ plugins: [
   new HtmlWebPackPlugin({
     template: "./src/index.html",
     filename: "./index.html"
-  })
+  }),
+  new Dotenv()
 ]
 };
  

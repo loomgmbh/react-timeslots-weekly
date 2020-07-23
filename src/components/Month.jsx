@@ -1,145 +1,133 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types';
 import helpers from './../util/helpers.js';
+import CalendarJS from 'calendarjs';
 import Week from './Week.jsx';
-
-const _renderActions = () => {
-  const { weeks, currentWeekIndex } = props
-  const currentWeek = weeks[currentWeekIndex];
-  const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0]);
-  const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1]);
-  const actionTitle = `${startDate.format('MMM Do')} - ${endDate.format('MMM Do')}`;
-
-  return (
-    <div className = "tsc-month__actions">
-      <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--left" onClick = { this._onPrevWeekClicked.bind(this) }>
-        &#8249;
-      </div>
-      <div className = "tsc-month__action tsc-month__action-title">
-        { actionTitle }
-      </div>
-      <div className = "tsc-month__action tsc-month__action-element tsc-month__action-element--right" onClick = { this._onNextWeekClicked.bind(this) }>
-        &#8250;
-      </div>
-    </div>
-  );
-}
-
-const _renderWeek = (currentWeekIndex) => {
-  const {
-    weeks,
-    initialDate,
-    timeslots,
-    timeslotProps,
-    selectedTimeslots,
-    disabledTimeslots,
-    renderDays,
-  } = props
-
-  return (
-    <Week
-      weekToRender = { weeks[currentWeekIndex] }
-      onTimeslotClick = { _onTimeslotClick.bind(this) }
-      initialDate = { initialDate }
-      timeslots = { timeslots }
-      timeslotProps = { timeslotProps }
-      selectedTimeslots = { selectedTimeslots }
-      disabledTimeslots = { disabledTimeslots }
-      renderDays = { renderDays }
-    />
-  );
-}
-
-const _onTimeslotClick = (timeslot) => {
-  const { onTimeslotClick } = props
-  onTimeslotClick(timeslot);
-}
-
-/**
- * Handles prev week button click.
- */
-const _onPrevWeekClicked = () => {
-  const {
-    currentWeekIndex,
-  } = this.state;
-
-  const {
-    onWeekOutOfMonth,
-    weeks,
-  } = this.props;
-
-  if (currentWeekIndex - 1 >= 0) {
-    this.setState({
-      currentWeekIndex: currentWeekIndex - 1,
-    });
-  }
-  else if (onWeekOutOfMonth) {
-    const firstDayOfPrevWeek = helpers.getMomentFromCalendarJSDateElement(weeks[0][0]).clone().subtract(1, 'days');
-    onWeekOutOfMonth(firstDayOfPrevWeek);
-  }
-}
-
-/**
- * Handles next week button click.
- */
-_onNextWeekClicked() {
-  const {
-    currentWeekIndex,
-  } = this.state;
-
-  const {
-    weeks,
-    onWeekOutOfMonth,
-  } = this.props;
-
-  if (currentWeekIndex + 1 < weeks.length) {
-    this.setState({
-      currentWeekIndex: currentWeekIndex + 1,
-    });
-  }
-  else if (onWeekOutOfMonth) {
-    const lastDay = weeks[currentWeekIndex].length - 1;
-    const firstDayOfNextWeek = helpers.getMomentFromCalendarJSDateElement(weeks[currentWeekIndex][lastDay]).clone().add(1, 'days');
-    onWeekOutOfMonth(firstDayOfNextWeek);
-  }
-}
-
-componentWillReceiveProps(nextProps) {
-  this.setState({
-    currentWeekIndex: this._getStartingWeek(nextProps.currentDate, nextProps.weeks),
-  });
-}
+import Calendar from 'react-calendar'
 
 const Month = props => {
-  const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
-  const _getStartingWeek = (currentDate, weeks) => {
-    // find out staring week:
-    const currentDateWithoutTime = currentDate.startOf('day');
-    let startingWeek  = 0;
-    weeks.some((week, index) => {
-      let weekContainsDate = week.some((day) => {
-        const momentDay = helpers.getMomentFromCalendarJSDateElement(day);
-        return momentDay.format() === currentDateWithoutTime.format();
-      });
+  const {
+    // weeks, 
+    currentDate, 
+    initialDate, 
+    timeslots, 
+    renderDays,
+    onWeekOutOfMonth,
+    timeslotProps, 
+    selectedTimeslots, 
+    disabledTimeslots, 
+    classRoot,
+    locale
+  } = props
+  // console.log(currentDate)
+  
+  const cal = new CalendarJS(currentDate.year(), currentDate.month() + 1);
+  const weeks = cal.generate();
 
-      if (weekContainsDate) {
-        startingWeek = index;
-        return weekContainsDate;
-      }
-    });
+  const [currentWeekIndex, setCurrentWeekIndex] = useState(helpers.getStartingWeek(currentDate, weeks));
+  const classRootModified = `${classRoot}--month`
 
-    return startingWeek;
+  const _onPrevWeekClicked = () => {
+    if (currentWeekIndex - 1 >= 0) {
+      setCurrentWeekIndex(currentWeekIndex - 1)
+    }
+    else if (onWeekOutOfMonth) {
+      // setCurrentWeekIndex(0)
+      const firstDayOfPrevWeek = helpers.getMomentFromCalendarJSDateElement(weeks[0]).clone().subtract(1, 'days');
+      onWeekOutOfMonth(firstDayOfPrevWeek);
+    }
+  }
+  
+  const _onNextWeekClicked = () => {
+    if (currentWeekIndex + 1 < weeks.length) {
+      let next = currentWeekIndex + 1
+      setCurrentWeekIndex(next)
+      console.log('cur week index', currentWeekIndex)
+    }
+    else {
+      console.log('out of month', currentWeekIndex)      
+      const lastDayIndex = weeks[currentWeekIndex].length - 1;
+      const lastDay = weeks[currentWeekIndex][lastDayIndex]
+      const momentDay = helpers.getMomentFromCalendarJSDateElement(lastDay, locale)
+      const firstDayOfNextWeek = momentDay.clone().add(1, 'days');
+
+      console.log(lastDay, momentDay)
+      // console.log(lastDay, firstDayOfNextWeek)
+      onWeekOutOfMonth(firstDayOfNextWeek);
+    }
+
   }
 
+  const _renderActions = props => {
+    // console.log(weeks, currentWeekIndex)
+    const currentWeek = weeks[currentWeekIndex] ?? weeks[0];
+    const startDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[0], locale);
+    const endDate = helpers.getMomentFromCalendarJSDateElement(currentWeek[currentWeek.length - 1], locale);
+    const actionTitle = `${startDate.local('de').format('D. MMMM')} - ${endDate.format('D. MMMM')} ${endDate.format('Y')}`;
+    const actionClasses = `${classRootModified}__action ${classRootModified}__action-element ${classRootModified}__action-element--left`
+    const nextClasses = `${classRootModified}__action ${classRootModified}__action-element ${classRootModified}__action-element--right`
+    return (
+      <div className = {`${classRootModified}__actions`}>
+        <button className='btn btn-booking'
+          className = {actionClasses} 
+          onClick = { _onPrevWeekClicked.bind(this)}
+        >
+          &#8249;
+        </button>
+        <h5 className = {`${classRootModified}__action ${classRootModified}__action-title`}>
+          { actionTitle }
+        </h5>
+        <button
+          className = {nextClasses}
+          onClick = { _onNextWeekClicked.bind(this) }
+        >
+          &#8250;
+        </button>
+      </div>
+    );
+  }
+  
+  const _renderWeek = props => {
+    return (
+      <Week
+        weekToRender = { weeks[currentWeekIndex] }
+        onTimeslotClick = { _onTimeslotClick.bind(this) }
+        initialDate = { initialDate }
+        timeslots = { timeslots }
+        timeslotProps = { timeslotProps }
+        selectedTimeslots = { selectedTimeslots }
+        disabledTimeslots = { disabledTimeslots }
+        // renderDays = { renderDays }
+        classRoot = { classRoot }
+        locale = { locale }
+      />
+    );
+  }
+  
+  const _onTimeslotClick = (timeslot) => {
+    const { onTimeslotClick } = props
+    onTimeslotClick(timeslot);
+  }
+  
+  // const componentWillReceiveProps = (nextProps) => {
+  //   this.setState({
+  //     currentWeekIndex: this.getStartingWeek(nextProps.currentDate, nextProps.weeks),
+  //   });
+  // }
+
   return (
-    <div className = "tsc-month">
-      { this._renderActions() }
-      { this._renderWeek() }
+    <div className = {classRootModified}>
+    { _renderActions()}
+    { _renderWeek() }
+     <div>
+      <h3>Week {currentWeekIndex} of {weeks.length}</h3>
+      
+     </div>
     </div>
   );
 }
 
-
+export default Month
 
 /**
 * @type {Object} currentDate: Base currentDate to get the month from - Usually first day of the month
@@ -152,10 +140,12 @@ const Month = props => {
 * @type {Array} selectedTimeslots: Selected Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
 * @type {Array} DisabledTimeslots: Disabled Timeslots Set used further into the tree to add the classes needed to when renderizing timeslots.
 * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
+* @type {String} classRoot: A string to use as css-class root.
+* @type {String} locale: country language code.
  */
 Month.propTypes = {
   currentDate: PropTypes.object.isRequired,
-  weeks: PropTypes.array.isRequired,
+  // weeks: PropTypes.array.isRequired,
   onWeekOutOfMonth: PropTypes.func,
   onTimeslotClick: PropTypes.func,
   initialDate: PropTypes.object.isRequired,
@@ -163,5 +153,7 @@ Month.propTypes = {
   timeslotProps: PropTypes.object,
   selectedTimeslots: PropTypes.array,
   disabledTimeslots: PropTypes.array,
-  renderDays: PropTypes.object,
+  // renderDays: PropTypes.object,
+  classRoot: PropTypes.string.isRequired,
+  locale: PropTypes.string
 };

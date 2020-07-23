@@ -1,0 +1,36 @@
+body {
+  background-color: #cccccc;
+}
+
+.booking-calendar {
+  &--week {
+    @media (min-width: 600px) {
+      display: flex;
+    }
+  }
+
+  &--day {
+    padding: 10px;
+  }
+
+  &--day-title,
+  &--day-timeslots {
+    padding: 10px;
+  }
+
+  &--timeslot {
+    button {
+      width: 100%;
+      padding: 20px;
+      border: 1px solid #000000;
+
+      &.btn--selected {
+        background-color: yellow;
+      }
+    }
+
+    + .booking-calendar--timeslot {
+      margin-top: 10px;
+    }
+  }
+}
