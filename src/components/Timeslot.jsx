@@ -1,75 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-
-import {
-  DEFAULT,
-  SELECTED,
-  DISABLED,
-} from '../constants/timeslot.js';
+import classNames from 'classnames'
+import util from './utility.js'
 
 const Timeslot = props => {
-
   const {
-    description,
-    status,
-    customClassNames,
+    slot,
+    slotTimeFormat,
+    selectedSlots,
+    setSelectedSlots,
+    handleSlotClick,
     classRoot,
-    locale
-  } = props;
+  } = props
+  
+  const start = util.getDate(slot['start']);
 
-  const classRootModified = `${classRoot}--timeslot`
-  const timeslotClassNames = classnames({
-    'booking-calendar--timeslot': true,
-    'booking-calendar--timeslot__disabled': status == SELECTED,
-    'booking-calendar--timeslot__selected': status == DISABLED,
-  }, customClassNames);
+  console.log(start)
+  const startTime = start.format(slotTimeFormat)
+  const date = start.format('YYYY-MM-DDTHH:mm:ss')
+  const init = util.isSlotSelected(date, selectedSlots)
+  const [selected, setSelected ] = useState(init)
+  
+  const buttonClasses = classNames({
+    'btn': true, 
+    [`btn--${classRoot}-slot`]: true,
+    'btn--selected': selected
+  });
 
-  const _onTimeslotClick = (event) => {
-    event.preventDefault();
-    const {
-      status,
-      onClick,
-    } = this.props;
+  // const onClick = (e) => {
+  //   const date = e.target.name
+  //   const updated = !selected
+  //   setSelected(updated)
+  //   util.updateSlots(updated, date, selectedSlots, setSelectedSlots)
+  // }
 
-    if (status !== DISABLED) {
-      onClick();
-    }
-  }
+  const classRootMod = `${classRoot}--timeslot`
 
   return (
-    <div className = { timeslotClassNames } onClick = { _onTimeslotClick.bind(this) }>
-      { description }
+    <div className={classRootMod} key={date}>
+      <button
+        className={buttonClasses}
+        name={date}
+        onClick={() => {
+          const updated = !selected
+          setSelected(updated)
+          handleSlotClick(date, updated)
+        }}
+      >
+        {startTime}
+      </button>
     </div>
-  );
+  )
 
 }
 
 export default Timeslot
-
-Timeslot.defaultProps = {
-  status: DEFAULT,
-};
-
-/**
- * @type {String} description: The contents to be displayed by the timeslot. Default format will resume to something similar to "7:00 PM - 8:00 PM"
- * @type {String} status: allows the div to change format based on the current status of the element (disabled, selected, default)
- * @type (Function) onClick: Function to be excecuted when clicked.
- * @type {String} classRoot: A string to use as css-class root.
- * @type {String} locale: country language code.
- */
-Timeslot.propTypes = {
-  description: PropTypes.string.isRequired,
-  status: PropTypes.oneOf([
-    DEFAULT,
-    SELECTED,
-    DISABLED,
-  ]),
-  onClick: PropTypes.func.isRequired,
-  customClassNames: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
-  ]),
-  classRoot: PropTypes.string.isRequired,
-  locale: PropTypes.string
-};

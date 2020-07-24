@@ -11,12 +11,13 @@ const Timeslots = props => {
     handleSlotClick,
     classRoot,
   } = props
-
+  
   const classRootMod = `${classRoot}--timeslots`
   const id = `${classRoot}--timeslot`
 
-  return (
+  return daySlots && (
     <div className={classRootMod}>
+      
       {daySlots.map((slot, index) => {     
         return (
           <Timeslot

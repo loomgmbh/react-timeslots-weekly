@@ -1,85 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-// import CalendarJS from 'calendarjs';
-import Month from './Month.jsx';
-import * as monthHelper from './../util/monthHelper.jsx'
-import { render } from 'react-dom';
+import Header from './Header.jsx'
+import Controls from './Controls.jsx'
+import Week from './Week.jsx'
+import Footer from './Footer.jsx'
+import { useAsyncTask, useAsyncRun } from 'react-hooks-async';
+import util from './utility.js'
   
-const Calendar = props => {
+const Booking = props => {
+  const {
+    classRoot, 
+    initialDate, 
+    dateTitleStartProps,
+    dateTitleEndProps,
+    dayTitleStartProps,
+    dayTitleEndProps,
+    slotTimeFormat,
+  } = props
+  
+  const daySteps = 7
+  const id = util.getProductId()
+  const curDate = util.getDate(initialDate)
+  const [startDay, setStartDay] = useState(util.getStartDay(curDate))
+  const [endDay, setEndDay] = useState(util.getEndDay(startDay))
+  const weekNumberRef = util.getWeekNumber(curDate)
+  const [weekNumber, setWeekNumber] = useState(weekNumberRef)
+  const [days, setDays] = useState(util.getDays(startDay, daySteps))
+  const [globalLoading, setGlobalLoading] = useState(false)
+  
+  const [, setSlots] = useState([])
+  const slotsData = util.getSlots(id, startDay, endDay, globalLoading, setGlobalLoading)
 
-  const {initialDate, timeslots, timeslotProps, locale, classRoot} = props
+  const [selectedSlots, setSelectedSlots] = useState([])
 
-  const renderMonth = () => {
-    const [currentDate, setCurrentDate] = useState(moment())
-    // const currentDate = moment();
-    const [firstDay, setFirstDay] = useState(moment());
-    const [selectedTimeslots, setSelectedTimeslots] = useState([]);
-    const { timeslots, initialDate } = props
-    return (
-      <Month
-        currentDate = { currentDate }
-        initialDate = { moment(initialDate) }
-        // weeks = { weeks }
-        onWeekOutOfMonth = { setCurrentDate }
-        onTimeslotClick = { monthHelper._onTimeslotClick.bind(this) }
-        timeslots = { timeslots }
-        timeslotProps = { timeslotProps }
-        selectedTimeslots = { selectedTimeslots }
-        disabledTimeslots = { [] }
-        classRoot = { classRoot }
-        locale = { locale }
-      />
-    );
+  const handleSlotClick = (date, selected) => {
+    if (selected) {
+      selectedSlots[date] = {
+        start: date,
+        end: '@todo',
+        duration: '@todo',
+      }
+    }
+    else {
+      delete selectedSlots[date]
+    }
+    // const newSelected = selectedSlots
+    setSelectedSlots(selectedSlots)
+    
   }
 
+  console.log(slotsData)
+  
   return (
     <div className = {classRoot}>
-      {renderMonth()}
-      {/* this._renderActions() }
-      { this._renderMonth() }
-      { this._renderInputs() */ }
+      <Header
+        weekNumber={weekNumber}
+        startDay={startDay}
+        endDay={endDay}
+        dateTitleStartProps={dateTitleStartProps}
+        dateTitleEndProps={dateTitleEndProps}
+        classRoot={classRoot}
+      />
+      <Controls
+        weekNumber={weekNumber}
+        weekNumberRef={weekNumberRef}
+        setWeekNumber={setWeekNumber}
+        startDay={startDay}
+        setStartDay={setStartDay}
+        setEndDay={setEndDay}
+        daySteps={daySteps}
+        setDays={setDays}
+        classRoot={classRoot}
+      />
+      {globalLoading && 
+        <div className={`${classRoot}--loading loading`}>
+        Loading...
+      </div>}
+      <Week 
+        days={days} 
+        dayTitleStartProps={dayTitleStartProps}
+        dayTitleEndProps={dayTitleEndProps}
+        slots={slotsData}
+        setSlots={setSlots}
+        slotTimeFormat={slotTimeFormat}
+        selectedSlots={selectedSlots}
+        setSelectedSlots={setSelectedSlots}
+        handleSlotClick={handleSlotClick}
+        classRoot={classRoot}
+      />
+      <Footer
+        selectedSlots = {selectedSlots}
+        classRoot = {classRoot}
+      />
     </div>
   );
 }
 
-export default Calendar
-
-Calendar.defaultProps = {
-  disabledTimeslots: [],
-  maxTimeslots: 1,
-  inputProps: {
-    names: {},
-  },
-  startDateInputProps: {},
-  endDateInputProps: {},
-  locale: 'en'
-};
-
-/**
- * @type {String} initialDate:  The initial date in which to place the calendar. Must be MomentJS parseable.
- * @type {Array} timeslots:  An array of timeslots to be displayed in each day.
- * @type {Object} timeslotProps: An object with keys and values for timeslot props (format, viewFormat)
- * @type {Array} selectedTimeslots: Initial value for selected timeslot inputs. Expects Dates formatted as Strings.
- * @type {Array} disabledTimeslots: Initial value for selected timeslot inputs. Expects Dates formatted as Strings.
- * @type {Integer} maxTimexlots: maximum ammount of timeslots to select.
-//  * @type {Object} renderDays: An array of days which states which days of the week to render. By default renders all days.
- * @type {Object} startDateInputProps: properties for the startDate Inputs. Includes name, class, type (hidden, text...)
- * @type {Object} endDateInputProps: properties for the endDate Inputs. Includes name, class, type (hidden, text...)
- * @type {String} classRoot: A string to use as css-class root.
- * @type {String} locale: country language code.
- */
-Calendar.propTypes = {
-  initialDate: PropTypes.string.isRequired,
-  timeslots: PropTypes.array.isRequired,
-  timeslotProps: PropTypes.object,
-  selectedTimeslots: PropTypes.array,
-  disabledTimeslots: PropTypes.array,
-  maxTimeslots: PropTypes.number,
-  // renderDays: PropTypes.object,
-  startDateInputProps: PropTypes.object,
-  endDateInputProps: PropTypes.object,
-  onSelectTimeslot: PropTypes.func,
-  classRoot: PropTypes.string.isRequired,
-  locale: PropTypes.string
-};
+export default Booking

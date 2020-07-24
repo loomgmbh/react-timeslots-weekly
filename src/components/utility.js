@@ -69,29 +69,20 @@ util.updateSlots = (selected, value, selectedSlots, setSelectedSlots) => {
   console.log(selectedSlots)
 }
 
-util.getSlots = (id, startDateObj, endDateObj) => {
-  const url = util.getSlotsUrl(id)
-  // const slots = await get(url)
-  // if (response.ok) {
-  //   console.log(slots)
-  //   return slots
-  // }
+util.getSlots = (id, startDateObj, endDateObj, globalLoading, setGlobalLoading) => {
 
-  // const url = `https://reqres.in/api/users/${id}?delay=1`;
-  // const endpoint = util.getSlotsUrl(id)
+  const url = util.getSlotsUrl(id)
   const options = {
     headers: {
       'Content-Type': 'application/json'
     },
   }
-  
-
   const { loading, error, data = [] } = useFetch(url, options, [])
   // if (error) return error
-  // if (loading) return loading
+  if (loading && globalLoading == false) setGlobalLoading(true)
   // if (typeof data.slots !== 'undefined' && data.slots.length > 0) {
-
   if (data.slots) {
+    if (globalLoading == true) setGlobalLoading(false)
     return data.slots
   }
 }
