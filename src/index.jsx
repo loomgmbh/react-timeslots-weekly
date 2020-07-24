@@ -3,7 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import moment from 'moment';
 // import Calendar from './components/Calendar.jsx';
-import Booking from './components/Calendar.jsx';
+import Booking from './Calendar.jsx';
 import './styles.scss'
 
 const Root = () => {
