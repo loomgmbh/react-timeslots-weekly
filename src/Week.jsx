@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Day from './Day.jsx'
-import util from './utility.js'
+import Day from './Day'
+import util from './utility'
 
 const Week = (props) => {
   const {
@@ -12,7 +12,7 @@ const Week = (props) => {
     slotTimeFormat,
     selectedSlots,
     setSelectedSlots,
-    handleSlotClick,
+    // handleSlotClick,
     slotTimeFieldFormat,
     classRoot,
   } = props
@@ -25,7 +25,7 @@ const Week = (props) => {
     <div className={classRootMod}>
       {days.map((day) => {
         const daySlots = util.getBookingsForDay(day, bookings)
-        console.log(day, daySlots)
+
         return (
           <Day
             key={day.format('X')}
@@ -37,7 +37,7 @@ const Week = (props) => {
             selectedSlots={selectedSlots}
             setSelectedSlots={setSelectedSlots}
             slotTimeFormat={slotTimeFormat}
-            handleSlotClick={handleSlotClick}
+            // handleSlotClick={handleSlotClick}
             slotTimeFieldFormat={slotTimeFieldFormat}
             classRoot={classRoot}
           />

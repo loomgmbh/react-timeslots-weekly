@@ -51,20 +51,17 @@ util.getBookingsForDay = (day, slots) => {
   return typeof slots[index] !== 'undefined' ? slots[index] : []
 }
 
-util.updateSlots = (selected, value, selectedSlots, setSelectedSlots) => {
+util.updateBookings = (selected, value, dispatch) => {
   if (selected) {
-    selectedSlots[value] = {
+    const slot = {
       start: value,
       end: '@todo',
       duration: '@todo',
     }
+    dispatch({ type: 'ADD_BOOKING', payload: slot })
   } else {
-    delete selectedSlots[value]
+    dispatch({ type: 'REMOVE_BOOKING', payload: value })
   }
-  const newSelected = selectedSlots
-  setSelectedSlots(newSelected)
-
-  // console.log(selectedSlots)
 }
 
 util.getSlots = (
@@ -72,22 +69,32 @@ util.getSlots = (
   startDateObj,
   endDateObj,
   globalLoading,
-  setGlobalLoading
+  setGlobalLoading,
+  globalError,
+  setGlobalError
 ) => {
+  // console.log(startDateObj)
   const url = util.getSlotsUrl(id)
   const options = {
     // headers: {
-    //   'Content-Type': 'application/json'
+    //   'Content-Type': 'application/json',
     // },
   }
   const { loading, error, data = [] } = useFetch(url, options, [])
-  // if (error) return error
-  if (loading && globalLoading == false) setGlobalLoading(true)
-  // if (typeof data.slots !== 'undefined' && data.slots.length > 0) {
+
+  if (error && globalError === false) {
+    setGlobalError(true)
+  }
+  if (loading && globalLoading === false) {
+    setGlobalLoading(true)
+  }
   if (data.slots) {
-    if (globalLoading == true) setGlobalLoading(false)
+    if (globalLoading === true) {
+      setGlobalLoading(false)
+    }
     return data
   }
+  return true
 }
 
 util.getSlotsDataValue = (data, prop) => {

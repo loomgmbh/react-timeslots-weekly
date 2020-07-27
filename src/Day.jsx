@@ -15,7 +15,6 @@ const Day = (props) => {
     setSelectedSlots,
     slotTimeFormat,
     slotTimeFieldFormat,
-    handleSlotClick,
     slotsDuration,
     dayStartTime,
     dayEndTime,
@@ -35,6 +34,7 @@ const Day = (props) => {
         selectedSlots={selectedSlots}
         setSelectedSlots={setSelectedSlots}
         slotTimeFormat={slotTimeFormat}
+        slotTimeFieldFormat={slotTimeFieldFormat}
         classRoot={classRoot}
       />
     ) : (

@@ -1,28 +1,35 @@
 const Reducer = (state, action) => {
+  const {bookings} = state
+  // const value = action.payload.start ?? null
   switch (action.type) {
-    case 'SET_POSTS':
+    case 'SET_BOOKINGS':
       return {
-          ...state,
-          posts: action.payload
-      };
-    case 'ADD_POST':
+        ...state,
+        bookings: action.payload,
+      }
+    case 'ADD_BOOKING':
+      const value = action.payload.start ?? null
+      bookings[value] = action.payload
       return {
-          ...state,
-          posts: state.posts.concat(action.payload)
-      };
-    case 'REMOVE_POST':
+        ...state,
+        bookings: bookings,
+        // bookings: state.bookings.concat(action.payload),
+      }
+    case 'REMOVE_BOOKING':
+      // const { bookings } = state
+      delete bookings[action.payload]
       return {
-          ...state,
-          posts: state.posts.filter(post => post.id !== action.payload)
-      };
+        ...state,
+        bookings,
+      }
     case 'SET_ERROR':
       return {
-          ...state,
-          error: action.payload
-      };
+        ...state,
+        error: action.payload,
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default Reducer;
+export default Reducer

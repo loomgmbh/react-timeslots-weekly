@@ -1,23 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import Store, { Context } from './Store'
 import util from './utility.js'
 
 const Timeslot = (props) => {
   const {
     slot,
     slotTimeFormat,
+    slotTimeFieldFormat,
     selectedSlots,
-    setSelectedSlots,
+    // setSelectedSlots,
     handleSlotClick,
     classRoot,
   } = props
 
+  const [state, dispatch] = useContext(Context)
+  const { bookings } = state
+
   const start = util.getDate(slot.start)
 
   const startTime = start.format(slotTimeFormat)
-  const date = start.format(process.env.REACT_APP_TIMEFIELD_FORMAT)
-  const init = util.isSlotSelected(date, selectedSlots)
+  const date = start.format(slotTimeFieldFormat)
+  const init = util.isSlotSelected(date, bookings)
   const [selected, setSelected] = useState(init)
 
   const buttonClasses = classNames({
@@ -27,10 +32,10 @@ const Timeslot = (props) => {
   })
 
   const onClick = (e) => {
-    const date = e.target.name
+    const selectedDate = e.target.name
     const updated = !selected
     setSelected(updated)
-    util.updateSlots(updated, date, selectedSlots, setSelectedSlots)
+    util.updateBookings(updated, selectedDate, dispatch)
   }
 
   const classRootMod = `${classRoot}--slot`

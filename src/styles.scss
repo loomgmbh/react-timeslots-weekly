@@ -11,11 +11,23 @@ body {
     }
   }
 
+  &--content-wrapper {
+    @media (min-width: 600px) {
+      display: flex;
+    }
+  }
+
   &--day {
     padding: 10px;
   }
 
-  // &--day-title,
+  &--day-title {
+    padding-bottom: 10px;
+
+    h5 {
+      margin: 0;
+    }
+  }
   // &--day-blocks {
   //   padding: 10px;
   // }
@@ -29,7 +41,7 @@ body {
 
   &--time-block {
     @media (min-width: 600px) {
-      height: 50px;
+      height: 30px;
     }
 
     small {
