@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import Store, { Context } from './Store'
+import { Context } from './Store'
 import util from './utility.js'
 
 const Timeslot = (props) => {

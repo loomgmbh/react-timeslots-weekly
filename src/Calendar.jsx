@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useAsyncTask, useAsyncRun } from 'react-hooks-async'
+import { writeStorage } from '@rehooks/local-storage'
 import Store, { Context } from './Store'
 import Header from './Header'
 import Controls from './Controls'
@@ -18,7 +18,16 @@ const Calendar = (props) => {
     dayTitleEndProps,
     slotTimeFormat,
     slotTimeFieldFormat,
+    footerSelectedTimeFormat,
   } = props
+
+  const [state, dispatch] = useContext(Context)
+  useEffect(() => {
+    dispatch({ type: 'SET_BOOKINGS', payload: {} })
+  }, [])
+  const { bookings } = state
+  writeStorage('bookings', bookings)
+  console.log(bookings)
 
   const daySteps = 7
   const id = util.getProductId()
@@ -42,28 +51,6 @@ const Calendar = (props) => {
     globalError,
     setGlobalError
   )
-
-  // const [selectedSlots, setSelectedSlots] = useState([])
-  const [state, dispatch] = useContext(Context)
-  useEffect(() => {
-    dispatch({ type: 'SET_BOOKINGS', payload: {} })
-  }, [])
-
-  const { bookings } = state
-
-  // const handleSlotClick = (date, selected) => {
-  //   if (selected) {
-  //     selectedSlots[date] = {
-  //       start: date,
-  //       end: '@todo',
-  //       duration: '@todo',
-  //     }
-  //   } else {
-  //     delete selectedSlots[date]
-  //   }
-  //   // const newSelected = selectedSlots
-  //   setSelectedSlots(selectedSlots)
-  // }
 
   return (
     <div className={classRoot}>
@@ -110,7 +97,11 @@ const Calendar = (props) => {
             classRoot={classRoot}
           />
         )}
-        <Footer selectedSlots={bookings} classRoot={classRoot} />
+        <Footer
+          selectedSlots={bookings}
+          footerSelectedTimeFormat={footerSelectedTimeFormat}
+          classRoot={classRoot}
+        />
       </div>
     </div>
   )

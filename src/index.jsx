@@ -27,6 +27,7 @@ const Root = () => {
         dayTitleEndProps="D."
         slotTimeFormat="H.mm"
         slotTimeFieldFormat="YYYY-MM-DDTHH:mm:ss"
+        footerSelectedTimeFormat="D. MM, H.mm"
         locale="de"
       />
     </Store>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
 import useFetch from 'use-http'
 
@@ -73,7 +74,8 @@ util.getSlots = (
   globalError,
   setGlobalError
 ) => {
-  // console.log(startDateObj)
+  // const [bookings] = useLocalStorage('bookings')
+  console.log(localStorage)
   const url = util.getSlotsUrl(id)
   const options = {
     // headers: {

@@ -2,7 +2,7 @@ import React from 'react'
 import util from './utility'
 
 const Footer = (props) => {
-  const { selectedSlots, classRoot } = props
+  const { selectedSlots, footerSelectedTimeFormat, classRoot } = props
 
   const classRootMod = `${classRoot}--footer`
   return (
@@ -10,7 +10,11 @@ const Footer = (props) => {
       <h5>{Object.keys(selectedSlots).length} selected</h5>
       {Object.entries(selectedSlots).map(([key, value]) => {
         const date = util.getDate(key)
-        return <div key={date.format('x')}>{date.format('D. MM, H.mm')}</div>
+        return (
+          <div key={date.format('x')}>
+            {date.format(footerSelectedTimeFormat)}
+          </div>
+        )
       })}
     </div>
   )
