@@ -19,6 +19,7 @@ const Calendar = (props) => {
     dayTitleStartProps,
     dayTitleEndProps,
     slotTimeFormat,
+    slotTimeFieldFormat,
   } = props
 
   const daySteps = 7
@@ -90,6 +91,7 @@ const Calendar = (props) => {
         selectedSlots={selectedSlots}
         setSelectedSlots={setSelectedSlots}
         handleSlotClick={handleSlotClick}
+        slotTimeFieldFormat={slotTimeFieldFormat}
         classRoot={classRoot}
       />
       <Footer selectedSlots={selectedSlots} classRoot={classRoot} />

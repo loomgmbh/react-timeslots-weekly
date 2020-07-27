@@ -26,6 +26,7 @@ const Root = () => {
         dayTitleStartProps="dd"
         dayTitleEndProps="D."
         slotTimeFormat="H.mm"
+        slotTimeFieldFormat="YYYY-MM-DDTHH:mm:ss"
         locale="de"
       />
     </Store>

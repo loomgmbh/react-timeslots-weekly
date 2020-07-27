@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import Timeslots from './TimeSlots'
 import Timeslot from './TimeSlot'
 import util from './utility'
 
@@ -15,6 +14,7 @@ const Day = (props) => {
     selectedSlots,
     setSelectedSlots,
     slotTimeFormat,
+    slotTimeFieldFormat,
     handleSlotClick,
     slotsDuration,
     dayStartTime,
@@ -24,58 +24,40 @@ const Day = (props) => {
 
   const classRootMod = `${classRoot}--day`
 
-  const hasOpenBooking = (slotTimeObj) => {
-    const format = 'YYYY-MM-DDTHH:mm:ss'
-    const time = slotTimeObj.format(format)
+  const renderSlot = (slotTimeObj) => {
+    if (!daySlots) return null
+    const time = slotTimeObj.format(slotTimeFieldFormat)
     // const format = process.env.REACT_APP_TIMEFIELD_FORMAT
-    return (
-      daySlots[time] && (
-        <Timeslot
-          slot={daySlots[time]}
-          selectedSlots={selectedSlots}
-          setSelectedSlots={setSelectedSlots}
-          slotTimeFormat={slotTimeFormat}
-          classRoot={classRoot}
-        />
-      )
+    // if (daySlots)
+    return daySlots[time] ? (
+      <Timeslot
+        slot={daySlots[time]}
+        selectedSlots={selectedSlots}
+        setSelectedSlots={setSelectedSlots}
+        slotTimeFormat={slotTimeFormat}
+        classRoot={classRoot}
+      />
+    ) : (
+      <small>{slotTimeObj.format('H.mm')}</small>
     )
   }
 
-  const renderSlots = (daySlots) => {
-    if (!daySlots || daySlots.length === 0) return null
-    const renderTrack = () => {
-      return (
-        <div className={`${classRoot}--day-slots`}>
-          {slots.map((slot) => {
-            const slotTimeObj = dateObj
-              .clone()
-              .startOf('day')
-              .add('minutes', slot)
-            return (
-              <div key={slot} className={`${classRoot}--time-block`}>
-                <small>{slotTimeObj.format('H.mm')}</small>
-                {hasOpenBooking(slotTimeObj)}
-              </div>
-            )
-          })}
-        </div>
-      )
-    }
-
+  const renderTimeTrack = (daySlots) => {
+    if (!slots || slots.length === 0) return null
     return (
-      <>
-        {renderTrack()}
-        {/* 
-        <Timeslots
-          daySlots={daySlots || []}
-          slotTimeFormat={slotTimeFormat}
-          selectedSlots={selectedSlots}
-          setSelectedSlots={setSelectedSlots}
-          handleSlotClick={handleSlotClick}
-          classRoot={classRoot}
-        />
-        */}
-      </>
+      <div className={`${classRoot}--day-blocks`}>
+        {slots.map((slot) => {
+          const slotTimeObj = dateObj
+            .clone()
+            .startOf('day')
+            .add(slot, 'minutes')
+          return (
+            <div key={slot} className={`${classRoot}--time-block`}>
+              {renderSlot(slotTimeObj)}
+            </div>
+          )
+        })}
+      </div>
     )
   }
 
@@ -87,7 +69,7 @@ const Day = (props) => {
           <span>{dateObj.format(dayTitleEndProps)} </span>
         </h5>
       </div>
-      {renderSlots(daySlots)}
+      {renderTimeTrack(daySlots)}
     </div>
   )
 }

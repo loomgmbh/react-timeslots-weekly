@@ -13,6 +13,7 @@ const Week = (props) => {
     selectedSlots,
     setSelectedSlots,
     handleSlotClick,
+    slotTimeFieldFormat,
     classRoot,
   } = props
 
@@ -24,6 +25,7 @@ const Week = (props) => {
     <div className={classRootMod}>
       {days.map((day) => {
         const daySlots = util.getBookingsForDay(day, bookings)
+        console.log(day, daySlots)
         return (
           <Day
             key={day.format('X')}
@@ -36,6 +38,7 @@ const Week = (props) => {
             setSelectedSlots={setSelectedSlots}
             slotTimeFormat={slotTimeFormat}
             handleSlotClick={handleSlotClick}
+            slotTimeFieldFormat={slotTimeFieldFormat}
             classRoot={classRoot}
           />
         )
