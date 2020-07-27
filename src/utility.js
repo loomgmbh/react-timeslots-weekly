@@ -46,7 +46,7 @@ util.getSlotsUrl = (id) => {
     + id
 }
 
-util.getSlotsForDay = (day, slots) => {
+util.getBookingsForDay = (day, slots) => {
   const index = day.format('Y-MM-DD')
   if (!slots) return
   return slots[index] ?? null
@@ -66,16 +66,16 @@ util.updateSlots = (selected, value, selectedSlots, setSelectedSlots) => {
   const newSelected = selectedSlots
   setSelectedSlots(newSelected)
   
-  console.log(selectedSlots)
+  // console.log(selectedSlots)
 }
 
 util.getSlots = (id, startDateObj, endDateObj, globalLoading, setGlobalLoading) => {
 
   const url = util.getSlotsUrl(id)
   const options = {
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    // headers: {
+    //   'Content-Type': 'application/json'
+    // },
   }
   const { loading, error, data = [] } = useFetch(url, options, [])
   // if (error) return error
@@ -83,8 +83,13 @@ util.getSlots = (id, startDateObj, endDateObj, globalLoading, setGlobalLoading) 
   // if (typeof data.slots !== 'undefined' && data.slots.length > 0) {
   if (data.slots) {
     if (globalLoading == true) setGlobalLoading(false)
-    return data.slots
+    return data
   }
+}
+
+util.getSlotsDataValue = (data, prop) => {
+  if (typeof data == 'undefined') return null
+  return typeof data.hasOwnProperty(prop) ? data[prop] : null
 }
   
 util.isSlotSelected = (id, selectedSlots) => {

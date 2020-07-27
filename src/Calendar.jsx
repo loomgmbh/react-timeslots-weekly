@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Header from './Header.jsx'
-import Controls from './Controls.jsx'
-import Week from './Week.jsx'
-import Footer from './Footer.jsx'
-import { useAsyncTask, useAsyncRun } from 'react-hooks-async';
-import util from './utility.js'
-  
-const Booking = props => {
+import React, { useState, useContext } from 'react'
+import PropTypes from 'prop-types'
+import { useAsyncTask, useAsyncRun } from 'react-hooks-async'
+import Store, { Context } from './Store'
+import Header from './Header'
+import Controls from './Controls'
+import Week from './Week'
+import Footer from './Footer'
+import util from './utility'
+
+const Calendar = (props) => {
+  const [state, dispatch] = useContext(Context)
+
   const {
-    classRoot, 
-    initialDate, 
+    classRoot,
+    initialDate,
     dateTitleStartProps,
     dateTitleEndProps,
     dayTitleStartProps,
     dayTitleEndProps,
     slotTimeFormat,
   } = props
-  
+
   const daySteps = 7
   const id = util.getProductId()
   const curDate = util.getDate(initialDate)
@@ -27,9 +30,15 @@ const Booking = props => {
   const [weekNumber, setWeekNumber] = useState(weekNumberRef)
   const [days, setDays] = useState(util.getDays(startDay, daySteps))
   const [globalLoading, setGlobalLoading] = useState(false)
-  
+
   const [, setSlots] = useState([])
-  const slotsData = util.getSlots(id, startDay, endDay, globalLoading, setGlobalLoading)
+  const data = util.getSlots(
+    id,
+    startDay,
+    endDay,
+    globalLoading,
+    setGlobalLoading
+  )
 
   const [selectedSlots, setSelectedSlots] = useState([])
 
@@ -40,19 +49,15 @@ const Booking = props => {
         end: '@todo',
         duration: '@todo',
       }
-    }
-    else {
+    } else {
       delete selectedSlots[date]
     }
     // const newSelected = selectedSlots
     setSelectedSlots(selectedSlots)
-    
   }
 
-  console.log(slotsData)
-  
   return (
-    <div className = {classRoot}>
+    <div className={classRoot}>
       <Header
         weekNumber={weekNumber}
         startDay={startDay}
@@ -72,15 +77,14 @@ const Booking = props => {
         setDays={setDays}
         classRoot={classRoot}
       />
-      {globalLoading && 
-        <div className={`${classRoot}--loading loading`}>
-        Loading...
-      </div>}
-      <Week 
-        days={days} 
+      {globalLoading && (
+        <div className={`${classRoot}--loading loading`}>Loading...</div>
+      )}
+      <Week
+        days={days}
         dayTitleStartProps={dayTitleStartProps}
         dayTitleEndProps={dayTitleEndProps}
-        slots={slotsData}
+        slotsData={data}
         setSlots={setSlots}
         slotTimeFormat={slotTimeFormat}
         selectedSlots={selectedSlots}
@@ -88,12 +92,9 @@ const Booking = props => {
         handleSlotClick={handleSlotClick}
         classRoot={classRoot}
       />
-      <Footer
-        selectedSlots = {selectedSlots}
-        classRoot = {classRoot}
-      />
+      <Footer selectedSlots={selectedSlots} classRoot={classRoot} />
     </div>
-  );
+  )
 }
 
-export default Booking
+export default Calendar

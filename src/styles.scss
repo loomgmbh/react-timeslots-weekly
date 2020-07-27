@@ -1,3 +1,5 @@
+$primaryColor: #4b678d;
+
 body {
   background-color: #cccccc;
 }
@@ -18,14 +20,15 @@ body {
     padding: 10px;
   }
 
-  &--timeslot {
+  &--slot {
     button {
       width: 100%;
-      padding: 20px;
+      // padding: 20px;
       border: 1px solid #000000;
 
       &.btn--selected {
-        background-color: yellow;
+        background-color: $primaryColor;
+        color: #ffffff;
       }
     }
 
