@@ -12,6 +12,7 @@ const Calendar = (props) => {
   const {
     classRoot,
     initialDate,
+    daySteps,
     dateTitleStartProps,
     dateTitleEndProps,
     dayTitleStartProps,
@@ -27,9 +28,7 @@ const Calendar = (props) => {
   }, [])
   const { bookings } = state
   writeStorage('bookings', bookings)
-  console.log(bookings)
 
-  const daySteps = 7
   const id = util.getProductId()
   const curDate = util.getDate(initialDate)
   const [startDay, setStartDay] = useState(util.getStartDay(curDate))

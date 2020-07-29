@@ -17,10 +17,7 @@ const Root = () => {
         classRoot="booking-calendar"
         firstDay="monday"
         initialDate={moment().startOf('day')}
-        timeslotProps={{
-          format: 'H', // Each element in the timeslot array is an Hour
-          showFormat: 'H.mm',
-        }}
+        daySteps="7"
         dateTitleStartProps="D. MMMM –"
         dateTitleEndProps="D. MMMM Y"
         dayTitleStartProps="dd"
