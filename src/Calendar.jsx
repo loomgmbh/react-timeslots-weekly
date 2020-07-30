@@ -22,34 +22,37 @@ const Calendar = (props) => {
     footerSelectedTimeFormat,
   } = props
 
-  const [state, dispatch] = useContext(Context)
-  useEffect(() => {
-    dispatch({ type: 'SET_BOOKINGS', payload: {} })
-  }, [])
-  const { bookings } = state
-  writeStorage('bookings', bookings)
-
   const id = util.getProductId()
   const curDate = util.getDate(initialDate)
   const [startDay, setStartDay] = useState(util.getStartDay(curDate))
   const [endDay, setEndDay] = useState(util.getEndDay(startDay))
-  const weekNumberRef = util.getWeekNumber(curDate)
-  const [weekNumber, setWeekNumber] = useState(weekNumberRef)
-  const [days, setDays] = useState(util.getDays(startDay, daySteps))
+  const currentWeekNumber = util.getWeekNumber(curDate)
+  const [weekNumber, setWeekNumber] = useState(currentWeekNumber)
+  const [daysSequence, setDays] = useState(
+    util.getDaySequence(startDay, daySteps)
+  )
   const [globalLoading, setGlobalLoading] = useState(false)
   const [globalError, setGlobalError] = useState(false)
 
-  // const [, setSlots] = useState([])
-
-  const data = util.getSlots(
+  const apiData = util.getApiData(
     id,
     startDay,
     endDay,
     globalLoading,
     setGlobalLoading,
     globalError,
-    setGlobalError
+    setGlobalError,
+    slotTimeFieldFormat
   )
+  const slots = util.getSlotsDataValue(apiData, 'slots')
+  const bookings = util.getSlotsDataValue(apiData, 'bookings')
+
+  const [state, dispatch] = useContext(Context)
+  useEffect(() => {
+    dispatch({ type: 'SET_BOOKINGS', payload: {} })
+  }, [])
+  const { selectedBookings } = state
+  // writeStorage('bookings', bookings)
 
   return (
     <div className={classRoot}>
@@ -63,7 +66,7 @@ const Calendar = (props) => {
       />
       <Controls
         weekNumber={weekNumber}
-        weekNumberRef={weekNumberRef}
+        currentWeekNumber={currentWeekNumber}
         setWeekNumber={setWeekNumber}
         startDay={startDay}
         setStartDay={setStartDay}
@@ -84,10 +87,11 @@ const Calendar = (props) => {
           </div>
         ) : (
           <Week
-            days={days}
+            daysSequence={daysSequence}
             dayTitleStartProps={dayTitleStartProps}
             dayTitleEndProps={dayTitleEndProps}
-            slotsData={data}
+            slots={slots}
+            bookings={bookings}
             // setSlots={setSlots}
             slotTimeFormat={slotTimeFormat}
             // selectedSlots={selectedSlots}
@@ -97,7 +101,7 @@ const Calendar = (props) => {
           />
         )}
         <Footer
-          selectedSlots={bookings}
+          selectedSlots={selectedBookings}
           footerSelectedTimeFormat={footerSelectedTimeFormat}
           classRoot={classRoot}
         />

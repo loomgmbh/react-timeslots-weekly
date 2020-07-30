@@ -1,26 +1,26 @@
 const Reducer = (state, action) => {
-  const {bookings} = state
+  const {selectedBookings} = state
   // const value = action.payload.start ?? null
   switch (action.type) {
     case 'SET_BOOKINGS':
       return {
         ...state,
-        bookings: action.payload,
+        selectedBookings: action.payload,
       }
     case 'ADD_BOOKING':
       const value = action.payload.start ?? null
-      bookings[value] = action.payload
+      selectedBookings[value] = action.payload
       return {
         ...state,
-        bookings: bookings,
-        // bookings: state.bookings.concat(action.payload),
+        selectedBookings: selectedBookings,
+        // selectedBookings: state.selectedBookings.concat(action.payload),
       }
     case 'REMOVE_BOOKING':
-      // const { bookings } = state
-      delete bookings[action.payload]
+      // const { selectedBookings } = state
+      delete selectedBookings[action.payload]
       return {
         ...state,
-        bookings,
+        selectedBookings,
       }
     case 'SET_ERROR':
       return {

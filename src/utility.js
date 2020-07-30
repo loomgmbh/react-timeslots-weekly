@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
-import useFetch from 'use-http'
+// import useFetch from 'use-http'
+import useFetch from 'react-hook-usefetch'
 
 const util = {}
 export default util
@@ -30,20 +31,12 @@ util.getEndDay = (dateObj) => {
   return dateObj.clone().endOf('isoWeek')
 }
 
-util.getDays = (dateObj, daySteps) => {
+util.getDaySequence = (dateObj, daySteps) => {
   const days = []
   for (let i = 0; i < daySteps; i++) {
     days.push(moment(dateObj).add(i, 'days'))
   }
   return days
-}
-
-util.getSlotsUrl = (id) => {
-  return (
-    process.env.REACT_APP_BASE_URL +
-    process.env.REACT_APP_API_BOOKINGS_ENDPOINT +
-    id
-  )
 }
 
 util.getBookingsForDay = (day, slots) => {
@@ -65,32 +58,65 @@ util.updateBookings = (selected, value, dispatch) => {
   }
 }
 
-util.getSlots = (
+util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
+  return (
+    `${
+      process.env.REACT_APP_BASE_URL +
+      process.env.REACT_APP_API_BOOKINGS_ENDPOINT +
+      id
+    }?df=${startDateObj.format(slotTimeFieldFormat)}` +
+    `&dt=${endDateObj.format(slotTimeFieldFormat)}`
+  )
+}
+
+util.getApiData = (
   id,
   startDateObj,
   endDateObj,
   globalLoading,
   setGlobalLoading,
   globalError,
-  setGlobalError
+  setGlobalError,
+  slotTimeFieldFormat
 ) => {
   // const [bookings] = useLocalStorage('bookings')
-  console.log(localStorage)
-  const url = util.getSlotsUrl(id)
-  const options = {
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
-  }
-  const { loading, error, data = [] } = useFetch(url, options, [])
+  // console.log(localStorage)
+  const url = util.getSlotsUrl(
+    id,
+    startDateObj,
+    endDateObj,
+    slotTimeFieldFormat
+  )
+  console.log(url)
+
+  // const [response, setResponse] = useState(null)
+  // const [loading, setLoading] = useState(false)
+  // const [error, setError] = useState(false)
+  // useEffect(() => {
+  //   setLoading(true)
+  //   fetch(url, {})
+  //     .then((res) => {
+  //       console.log(res.data)
+  //       setResponse(res.data)
+  //       setLoading(false)
+  //     })
+  //     .catch(() => {
+  //       setError(true)
+  //       setLoading(false)
+  //     })
+  // }, [url])
+
+  const { data, loading, error = [] } = useFetch(url, {})
+  // console.log(url, data)
 
   if (error && globalError === false) {
+    setGlobalLoading(false)
     setGlobalError(true)
   }
   if (loading && globalLoading === false) {
     setGlobalLoading(true)
   }
-  if (data.slots) {
+  if (data && typeof data.slots !== 'undefined') {
     if (globalLoading === true) {
       setGlobalLoading(false)
     }
@@ -99,6 +125,11 @@ util.getSlots = (
   return true
 }
 
+/**
+ *
+ * @param {Object} data
+ * @param {String} prop
+ */
 util.getSlotsDataValue = (data, prop) => {
   if (typeof data === 'undefined') return null
   return typeof data.hasOwnProperty(prop) ? data[prop] : null

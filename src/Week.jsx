@@ -5,26 +5,24 @@ import util from './utility'
 
 const Week = (props) => {
   const {
-    days,
+    daysSequence,
     dayTitleStartProps,
     dayTitleEndProps,
-    slotsData,
+    slots,
+    bookings,
     slotTimeFormat,
     selectedSlots,
     setSelectedSlots,
-    // handleSlotClick,
     slotTimeFieldFormat,
     classRoot,
   } = props
 
   const classRootMod = `${classRoot}--week`
-  const slots = util.getSlotsDataValue(slotsData, 'slots')
-  const bookings = util.getSlotsDataValue(slotsData, 'bookings')
 
   return (
     <div className={classRootMod}>
-      {days.map((day) => {
-        const daySlots = util.getBookingsForDay(day, bookings)
+      {daysSequence.map((day) => {
+        const dayBookings = util.getBookingsForDay(day, bookings)
 
         return (
           <Day
@@ -33,11 +31,10 @@ const Week = (props) => {
             slots={slots}
             dayTitleStartProps={dayTitleStartProps}
             dayTitleEndProps={dayTitleEndProps}
-            daySlots={daySlots}
+            dayBookings={dayBookings}
             selectedSlots={selectedSlots}
             setSelectedSlots={setSelectedSlots}
             slotTimeFormat={slotTimeFormat}
-            // handleSlotClick={handleSlotClick}
             slotTimeFieldFormat={slotTimeFieldFormat}
             classRoot={classRoot}
           />

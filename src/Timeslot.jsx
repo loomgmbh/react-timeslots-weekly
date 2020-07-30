@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { Context } from './Store'
@@ -16,13 +17,11 @@ const Timeslot = (props) => {
   } = props
 
   const [state, dispatch] = useContext(Context)
-  const { bookings } = state
-
-  const start = util.getDate(slot.start)
-
+  const { selectedBookings } = state
+  const start = moment(slot.start)
   const startTime = start.format(slotTimeFormat)
   const date = start.format(slotTimeFieldFormat)
-  const init = util.isSlotSelected(date, bookings)
+  const init = util.isSlotSelected(date, selectedBookings)
   const [selected, setSelected] = useState(init)
 
   const buttonClasses = classNames({
@@ -38,6 +37,10 @@ const Timeslot = (props) => {
     util.updateBookings(updated, selectedDate, dispatch)
   }
 
+  const isDisabled = () => {
+    return start.isBefore(moment())
+  }
+
   const classRootMod = `${classRoot}--slot`
 
   return (
@@ -47,11 +50,7 @@ const Timeslot = (props) => {
         className={buttonClasses}
         name={date}
         onClick={onClick}
-        // onClick={() => {
-        //   const updated = !selected
-        //   setSelected(updated)
-        //   handleSlotClick(date, updated)
-        // }}
+        disabled={isDisabled()}
       >
         {startTime}
       </button>

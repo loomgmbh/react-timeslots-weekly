@@ -5656,6 +5656,11 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
+react-hook-usefetch@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-hook-usefetch/-/react-hook-usefetch-1.0.4.tgz#2db992128a9cc3bf28c7c6abc8eae4ff5d515ba7"
+  integrity sha512-CtOJWn+owxoIA6YncyL3griBiJzfnV3DkS0Bx6txWxrWbJMfS8dJyHwEoxNomtJNPPlZfT2L9qIa53yWQKV84w==
+
 react-hooks-async@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/react-hooks-async/-/react-hooks-async-3.10.1.tgz#427ad61361ecb1e43cefaafa5f584e6560da8eb8"

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import util from './utility.js'
 
 
 const Controls = props => {
   const {
     weekNumber,
-    weekNumberRef,
+    currentWeekNumber,
     setWeekNumber,
     startDay,
     setStartDay,
@@ -26,7 +25,7 @@ const Controls = props => {
     setStartDay(newDay)
     setEndDay(newEndDay)
     setWeekNumber(newWeekNumber)
-    setDays(util.getDays(newDay, daySteps))
+    setDays(util.getDaySequence(newDay, daySteps))
   }
 
   const classRootMod = `${classRoot}--controls`
@@ -36,7 +35,7 @@ const Controls = props => {
         className={`btn btn--${classRootMod}`}
         name='previous'
         value='-1'
-        disabled={weekNumber === weekNumberRef}
+        disabled={weekNumber === currentWeekNumber}
         onClick={handleClick}
       >
         &#8249;

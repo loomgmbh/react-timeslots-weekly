@@ -10,7 +10,7 @@ const Day = (props) => {
     slots,
     dayTitleStartProps,
     dayTitleEndProps,
-    daySlots,
+    dayBookings,
     selectedSlots,
     setSelectedSlots,
     slotTimeFormat,
@@ -24,13 +24,13 @@ const Day = (props) => {
   const classRootMod = `${classRoot}--day`
 
   const renderSlot = (slotTimeObj) => {
-    if (!daySlots) return null
+    if (!dayBookings) return null
     const time = slotTimeObj.format(slotTimeFieldFormat)
     // const format = process.env.REACT_APP_TIMEFIELD_FORMAT
-    // if (daySlots)
-    return daySlots[time] ? (
+    // if (dayBookings)
+    return dayBookings[time] ? (
       <Timeslot
-        slot={daySlots[time]}
+        slot={dayBookings[time]}
         selectedSlots={selectedSlots}
         setSelectedSlots={setSelectedSlots}
         slotTimeFormat={slotTimeFormat}
@@ -42,7 +42,7 @@ const Day = (props) => {
     )
   }
 
-  const renderTimeTrack = (daySlots) => {
+  const renderTimeTrack = (dayBookings) => {
     if (!slots || slots.length === 0) return null
     return (
       <div className={`${classRoot}--day-blocks`}>
@@ -69,7 +69,7 @@ const Day = (props) => {
           <span>{dateObj.format(dayTitleEndProps)} </span>
         </h5>
       </div>
-      {renderTimeTrack(daySlots)}
+      {renderTimeTrack(dayBookings)}
     </div>
   )
 }
