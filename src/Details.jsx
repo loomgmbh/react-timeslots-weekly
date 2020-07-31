@@ -27,11 +27,16 @@ const Details = () => {
       )
     )
   }
+  console.log()
   return (
     <div className={classRootMod}>
-      <h3>Start {startDay.format('DD.MM.')}</h3>
-      <h3>End {endDay.format('DD.MM.')}</h3>
-      <h5>Url: {apiUrl}</h5>
+      {process.env.NODE_ENV === 'development' && (
+        <>
+          <h3>Start {startDay.format('DD.MM.')}</h3>
+          <h3>End {endDay.format('DD.MM.')}</h3>
+          <h5>Url: {apiUrl}</h5>
+        </>
+      )}
       {renderSelectedBookings()}
     </div>
   )
