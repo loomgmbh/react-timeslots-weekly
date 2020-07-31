@@ -7,12 +7,14 @@ const Controls = props => {
   const [state, dispatch] = useContext(Context)
   const {query, formats} = state
   const {
+    productId,
     currentWeekNumber,
     weekNumber,
     startDay,
+    endDay,
     daySteps,
   } = query
-  const {classRoot} = formats
+  const {classRoot, slotTimeFieldFormat} = formats
 
   const handleClick = (e) => {
     const value = e.target.value ?? 0
@@ -20,15 +22,22 @@ const Controls = props => {
     const newDay = startDay.clone().add(steps, 'days')
     const newEndDay = newDay.clone().add(steps - 1, 'days')
     const newWeekNumber = parseInt(weekNumber) + parseInt(value)
+    const newUrl = util.getSlotsUrl(
+      productId,
+      newDay,
+      newEndDay,
+      slotTimeFieldFormat
+    )
     const changes = {
+      apiUrl: newUrl,
       startDay: newDay,
       endDay: newEndDay,
       weekNumber: newWeekNumber,
       daysOfWeek: util.getDaysOfWeek(newDay, daySteps),
     }    
     const payload = {...query, ...changes}
-    console.log('payload', payload)
     dispatch({ type: 'SET_QUERY', payload: payload })
+
   }
 
   const classRootMod = `${classRoot}--controls`

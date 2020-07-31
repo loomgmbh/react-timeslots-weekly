@@ -12,10 +12,14 @@ const Calendar = () => {
   const { query, formats, error } = state
   const { classRoot } = formats
   const { apiUrl } = query
-  const apiData = util.getApiData(apiUrl, null, dispatch)
+  const apiData = util.getApiData(apiUrl)
   const { status, bookings, slots } = apiData
+  // console.log(status, bookings, slots)
 
   useEffect(() => {
+    if (apiData) {
+      // setApiData(util.getApiData(apiUrl, null, dispatch))
+    }
     if (bookings) {
       dispatch({ type: 'SET_BOOKINGS', payload: bookings })
     }
@@ -28,7 +32,7 @@ const Calendar = () => {
     if (error) {
       dispatch({ type: 'SET_ERROR', payload: error })
     }
-  }, [bookings, slots, status, error])
+  }, [apiUrl, bookings, slots, status, error])
 
   return (
     <div className={classRoot}>

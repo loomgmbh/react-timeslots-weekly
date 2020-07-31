@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
 // import useFetch from 'use-http'
 import useFetch from 'react-hook-usefetch'
+import { Context } from './Store'
 
 const util = {}
 export default util
@@ -69,9 +70,11 @@ util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
   )
 }
 
-util.getApiData = (apiUrl, status, dispatch) => {
-  const { state, error, data } = util.useApi(apiUrl)
-  return { ...data, ...{ status: state }, ...{ error } }
+util.getApiData = (apiUrl) => {
+  const { status, error, data } = util.useApi(apiUrl)
+  const merge = { ...data, ...{ status }, ...{ error } }
+  // console.log(merge)
+  return merge
 }
 
 util.useApi = (url) => {
@@ -82,7 +85,7 @@ util.useApi = (url) => {
   }
 
   const [data, setData] = React.useState({
-    state: apiStates.LOADING,
+    status: apiStates.LOADING,
     error: '',
     data: [],
   })
@@ -91,19 +94,19 @@ util.useApi = (url) => {
 
   React.useEffect(() => {
     setPartData({
-      state: apiStates.LOADING,
+      status: apiStates.LOADING,
     })
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setPartData({
-          state: apiStates.SUCCESS,
+          status: apiStates.SUCCESS,
           data,
         })
       })
       .catch(() => {
         setPartData({
-          state: apiStates.ERROR,
+          status: apiStates.ERROR,
           error: 'fetch failed',
         })
       })
