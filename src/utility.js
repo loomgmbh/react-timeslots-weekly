@@ -31,7 +31,7 @@ util.getEndDay = (dateObj) => {
   return dateObj.clone().endOf('isoWeek')
 }
 
-util.getDaySequence = (dateObj, daySteps) => {
+util.getDaysOfWeek = (dateObj, daySteps = 7) => {
   const days = []
   for (let i = 0; i < daySteps; i++) {
     days.push(moment(dateObj).add(i, 'days'))
@@ -52,9 +52,9 @@ util.updateBookings = (selected, value, dispatch) => {
       end: '@todo',
       duration: '@todo',
     }
-    dispatch({ type: 'ADD_BOOKING', payload: slot })
+    dispatch({ type: 'ADD_SELECTED_BOOKING', payload: slot })
   } else {
-    dispatch({ type: 'REMOVE_BOOKING', payload: value })
+    dispatch({ type: 'REMOVE_SELECTED_BOOKING', payload: value })
   }
 }
 
@@ -69,60 +69,47 @@ util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
   )
 }
 
-util.getApiData = (
-  id,
-  startDateObj,
-  endDateObj,
-  globalLoading,
-  setGlobalLoading,
-  globalError,
-  setGlobalError,
-  slotTimeFieldFormat
-) => {
-  // const [bookings] = useLocalStorage('bookings')
-  // console.log(localStorage)
-  const url = util.getSlotsUrl(
-    id,
-    startDateObj,
-    endDateObj,
-    slotTimeFieldFormat
-  )
-  console.log(url)
+util.getApiData = (apiUrl, status, dispatch) => {
+  const { state, error, data } = util.useApi(apiUrl)
+  return { ...data, ...{ status: state }, ...{ error } }
+}
 
-  // const [response, setResponse] = useState(null)
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState(false)
-  // useEffect(() => {
-  //   setLoading(true)
-  //   fetch(url, {})
-  //     .then((res) => {
-  //       console.log(res.data)
-  //       setResponse(res.data)
-  //       setLoading(false)
-  //     })
-  //     .catch(() => {
-  //       setError(true)
-  //       setLoading(false)
-  //     })
-  // }, [url])
+util.useApi = (url) => {
+  const apiStates = {
+    LOADING: 'LOADING',
+    SUCCESS: 'SUCCESS',
+    ERROR: 'ERROR',
+  }
 
-  const { data, loading, error = [] } = useFetch(url, {})
-  // console.log(url, data)
+  const [data, setData] = React.useState({
+    state: apiStates.LOADING,
+    error: '',
+    data: [],
+  })
 
-  if (error && globalError === false) {
-    setGlobalLoading(false)
-    setGlobalError(true)
-  }
-  if (loading && globalLoading === false) {
-    setGlobalLoading(true)
-  }
-  if (data && typeof data.slots !== 'undefined') {
-    if (globalLoading === true) {
-      setGlobalLoading(false)
-    }
-    return data
-  }
-  return true
+  const setPartData = (partialData) => setData({ ...data, ...partialData })
+
+  React.useEffect(() => {
+    setPartData({
+      state: apiStates.LOADING,
+    })
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setPartData({
+          state: apiStates.SUCCESS,
+          data,
+        })
+      })
+      .catch(() => {
+        setPartData({
+          state: apiStates.ERROR,
+          error: 'fetch failed',
+        })
+      })
+  }, [url])
+
+  return data
 }
 
 /**

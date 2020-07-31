@@ -1,52 +1,39 @@
-import React, { useState } from 'react'
-import moment from 'moment'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import Timeslot from './TimeSlot'
+import moment from 'moment'
+import { Context } from './Store'
+import Timeslot from './Timeslot'
 import util from './utility'
 
 const Day = (props) => {
+  const { dateObj } = props
+  const [state] = useContext(Context)
+  const { openBookings, timeslots, formats } = state
   const {
-    dateObj,
-    slots,
     dayTitleStartProps,
     dayTitleEndProps,
-    dayBookings,
-    selectedSlots,
-    setSelectedSlots,
-    slotTimeFormat,
     slotTimeFieldFormat,
-    slotsDuration,
-    dayStartTime,
-    dayEndTime,
     classRoot,
-  } = props
+  } = formats
 
+  const dayBookings = util.getBookingsForDay(dateObj, openBookings)
   const classRootMod = `${classRoot}--day`
 
   const renderSlot = (slotTimeObj) => {
     if (!dayBookings) return null
     const time = slotTimeObj.format(slotTimeFieldFormat)
-    // const format = process.env.REACT_APP_TIMEFIELD_FORMAT
-    // if (dayBookings)
     return dayBookings[time] ? (
-      <Timeslot
-        slot={dayBookings[time]}
-        selectedSlots={selectedSlots}
-        setSelectedSlots={setSelectedSlots}
-        slotTimeFormat={slotTimeFormat}
-        slotTimeFieldFormat={slotTimeFieldFormat}
-        classRoot={classRoot}
-      />
+      <Timeslot timeslot={dayBookings[time]} />
     ) : (
       <small>{slotTimeObj.format('H.mm')}</small>
     )
   }
 
-  const renderTimeTrack = (dayBookings) => {
-    if (!slots || slots.length === 0) return null
+  const renderTimeTrack = () => {
+    if (!timeslots || timeslots.length === 0) return null
     return (
       <div className={`${classRoot}--day-blocks`}>
-        {slots.map((slot) => {
+        {timeslots.map((slot) => {
           const slotTimeObj = dateObj
             .clone()
             .startOf('day')

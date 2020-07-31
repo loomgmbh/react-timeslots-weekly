@@ -39,6 +39,7 @@
     "css-loader": "^3.6.0",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^2.0.0",
+    "moment": "^2.27.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-calendar": "^3.1.0",
@@ -48,7 +49,6 @@
     "react-timeslot-calendar": "^0.2.0",
     "sass-loader": "^9.0.2",
     "style-loader": "^1.2.1",
-    "use-http": "^1.0.13",
     "webpack-cli": "^3.3.12",
     "yarn": "^1.22.4"
   },

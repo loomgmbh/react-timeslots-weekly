@@ -1,44 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
+import { Context } from './Store'
 import Day from './Day'
-import util from './utility'
 
 const Week = (props) => {
-  const {
-    daysSequence,
-    dayTitleStartProps,
-    dayTitleEndProps,
-    slots,
-    bookings,
-    slotTimeFormat,
-    selectedSlots,
-    setSelectedSlots,
-    slotTimeFieldFormat,
-    classRoot,
-  } = props
-
+  const [state] = useContext(Context)
+  const { query, formats } = state
+  const { daysOfWeek } = query
+  const { classRoot } = formats
   const classRootMod = `${classRoot}--week`
 
   return (
     <div className={classRootMod}>
-      {daysSequence.map((day) => {
-        const dayBookings = util.getBookingsForDay(day, bookings)
-
-        return (
-          <Day
-            key={day.format('X')}
-            dateObj={day}
-            slots={slots}
-            dayTitleStartProps={dayTitleStartProps}
-            dayTitleEndProps={dayTitleEndProps}
-            dayBookings={dayBookings}
-            selectedSlots={selectedSlots}
-            setSelectedSlots={setSelectedSlots}
-            slotTimeFormat={slotTimeFormat}
-            slotTimeFieldFormat={slotTimeFieldFormat}
-            classRoot={classRoot}
-          />
-        )
+      {daysOfWeek.map((day) => {
+        return <Day key={day.format('X')} dateObj={day} />
       })}
     </div>
   )

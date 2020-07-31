@@ -3,22 +3,14 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { Context } from './Store'
-import util from './utility.js'
+import util from './utility'
 
 const Timeslot = (props) => {
-  const {
-    slot,
-    slotTimeFormat,
-    slotTimeFieldFormat,
-    selectedSlots,
-    // setSelectedSlots,
-    handleSlotClick,
-    classRoot,
-  } = props
-
+  const { timeslot } = props
   const [state, dispatch] = useContext(Context)
-  const { selectedBookings } = state
-  const start = moment(slot.start)
+  const { selectedBookings, formats } = state
+  const { slotTimeFormat, slotTimeFieldFormat, classRoot } = formats
+  const start = moment(timeslot.start)
   const startTime = start.format(slotTimeFormat)
   const date = start.format(slotTimeFieldFormat)
   const init = util.isSlotSelected(date, selectedBookings)
@@ -37,9 +29,7 @@ const Timeslot = (props) => {
     util.updateBookings(updated, selectedDate, dispatch)
   }
 
-  const isDisabled = () => {
-    return start.isBefore(moment())
-  }
+  const isDisabled = () => start.isBefore(moment())
 
   const classRootMod = `${classRoot}--slot`
 
