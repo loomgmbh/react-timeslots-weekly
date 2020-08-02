@@ -1,0 +1,11 @@
+{
+  "name": "loom/react-timeslots-calendar",
+  "type": "drupal-library",
+  "authors": [
+    {
+      "name": "Isaac Bigsby Trogdon",
+      "email": "i.trogdon@loom.de"
+    }
+  ],
+  "require": {}
+}
