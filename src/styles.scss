@@ -1,9 +1,5 @@
 $primaryColor: #4b678d;
 
-body {
-  background-color: #cccccc;
-}
-
 .booking-calendar {
   &--week {
     @media (min-width: 600px) {
@@ -28,9 +24,6 @@ body {
       margin: 0;
     }
   }
-  // &--day-blocks {
-  //   padding: 10px;
-  // }
 
   &--day-blocks {
     display: flex;
@@ -71,6 +64,10 @@ body {
 
       &:hover {
         cursor: pointer;
+      }
+
+      &[disabled] {
+        background-color: #bbbbbb;
       }
 
       &.btn--selected {
