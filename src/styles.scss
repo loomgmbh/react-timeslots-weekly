@@ -68,6 +68,7 @@ $primaryColor: #4b678d;
 
       &[disabled] {
         background-color: #bbbbbb;
+        cursor: inherit;
       }
 
       &.btn--selected {
