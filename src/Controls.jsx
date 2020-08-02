@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import Store, { Context } from './Store'
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import util from './utility.js'
 
-
 const Controls = props => {
+  const [state, dispatch] = useContext(Context)
+  const {query, formats} = state
   const {
+    productId,
+    currentWeekNumber,
     weekNumber,
-    weekNumberRef,
-    setWeekNumber,
     startDay,
-    setStartDay,
-    setEndDay,
+    endDay,
     daySteps,
-    setDays,
-    classRoot
-  } = props
+  } = query
+  const {classRoot, slotTimeFieldFormat} = formats
 
   const handleClick = (e) => {
     const value = e.target.value ?? 0
@@ -23,10 +22,22 @@ const Controls = props => {
     const newDay = startDay.clone().add(steps, 'days')
     const newEndDay = newDay.clone().add(steps - 1, 'days')
     const newWeekNumber = parseInt(weekNumber) + parseInt(value)
-    setStartDay(newDay)
-    setEndDay(newEndDay)
-    setWeekNumber(newWeekNumber)
-    setDays(util.getDays(newDay, daySteps))
+    const newUrl = util.getSlotsUrl(
+      productId,
+      newDay,
+      newEndDay,
+      slotTimeFieldFormat
+    )
+    const changes = {
+      apiUrl: newUrl,
+      startDay: newDay,
+      endDay: newEndDay,
+      weekNumber: newWeekNumber,
+      daysOfWeek: util.getDaysOfWeek(newDay, daySteps),
+    }    
+    const payload = {...query, ...changes}
+    dispatch({ type: 'SET_QUERY', payload: payload })
+
   }
 
   const classRootMod = `${classRoot}--controls`
@@ -36,7 +47,7 @@ const Controls = props => {
         className={`btn btn--${classRootMod}`}
         name='previous'
         value='-1'
-        disabled={weekNumber === weekNumberRef}
+        disabled={weekNumber === currentWeekNumber}
         onClick={handleClick}
       >
         &#8249;

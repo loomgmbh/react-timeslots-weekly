@@ -1,3 +1,5 @@
+$primaryColor: #4b678d;
+
 body {
   background-color: #cccccc;
 }
@@ -9,23 +11,71 @@ body {
     }
   }
 
+  &--content-wrapper {
+    @media (min-width: 600px) {
+      display: flex;
+    }
+  }
+
   &--day {
     padding: 10px;
   }
 
-  &--day-title,
-  &--day-timeslots {
-    padding: 10px;
+  &--day-title {
+    padding-bottom: 10px;
+
+    h5 {
+      margin: 0;
+    }
+  }
+  // &--day-blocks {
+  //   padding: 10px;
+  // }
+
+  &--day-blocks {
+    display: flex;
+
+    @media (min-width: 600px) {
+      display: inherit;
+    }
   }
 
-  &--timeslot {
+  &--time-block {
+    height: 40px;
+
+    small {
+      padding: 10px;
+      opacity: 0.5;
+      display: none;
+
+      @media (min-width: 600px) {
+        display: block;
+      }
+    }
+  }
+
+  &--slot {
+    padding: 10px;
+
+    @media (min-width: 600px) {
+      padding: 0;
+    }
+
     button {
+      margin-top: 5px;
       width: 100%;
-      padding: 20px;
-      border: 1px solid #000000;
+      height: 25px;
+      color: $primaryColor;
+      border: 1px solid $primaryColor;
+      outline: 0;
+
+      &:hover {
+        cursor: pointer;
+      }
 
       &.btn--selected {
-        background-color: yellow;
+        background-color: $primaryColor;
+        color: #ffffff;
       }
     }
 
