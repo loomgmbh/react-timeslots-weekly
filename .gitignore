@@ -1,5 +1,6 @@
 # distro files
 node_modules
+.vscode
 
 .env
 /vendor/
