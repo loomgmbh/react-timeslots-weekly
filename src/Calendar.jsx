@@ -5,6 +5,7 @@ import Header from './Header'
 import Controls from './Controls'
 import Week from './Week'
 import Details from './Details'
+import Submit from './Submit'
 import util from './utility'
 
 const Calendar = () => {
@@ -17,9 +18,9 @@ const Calendar = () => {
   // console.log(status, bookings, slots)
 
   useEffect(() => {
-    if (apiData) {
-      // setApiData(util.getApiData(apiUrl, null, dispatch))
-    }
+    // if (apiData) {
+    //   // setApiData(util.getApiData(apiUrl, null, dispatch))
+    // }
     if (bookings) {
       dispatch({ type: 'SET_BOOKINGS', payload: bookings })
     }
@@ -53,6 +54,7 @@ const Calendar = () => {
         )}
         {status === 'SUCCESS' && <Week />}
       </div>
+      <Submit />
     </div>
   )
 }

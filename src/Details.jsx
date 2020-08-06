@@ -7,14 +7,12 @@ const Details = () => {
   const { selectedBookings, query, formats } = state
   const { startDay, endDay, apiUrl } = query
   const { classRoot, footerSelectedTimeFormat } = formats
-
   const classRootMod = `${classRoot}--footer`
-  const selectedCount = Object.keys(selectedBookings).length
+
   const renderSelectedBookings = () => {
     return (
-      selectedCount > 0 && (
+      util.hasSelection(selectedBookings) && (
         <div>
-          <h5>{Object.keys(selectedBookings).length} selected</h5>
           {Object.entries(selectedBookings).map(([key, value]) => {
             const date = util.getDate(key)
             return (
@@ -27,7 +25,7 @@ const Details = () => {
       )
     )
   }
-  console.log()
+
   return (
     <div className={classRootMod}>
       {process.env.NODE_ENV === 'development' && (
@@ -35,6 +33,7 @@ const Details = () => {
           <h3>Start {startDay.format('DD.MM.')}</h3>
           <h3>End {endDay.format('DD.MM.')}</h3>
           <h5>Url: {apiUrl}</h5>
+          <h5>{Object.keys(selectedBookings).length} selected</h5>
         </>
       )}
       {renderSelectedBookings()}

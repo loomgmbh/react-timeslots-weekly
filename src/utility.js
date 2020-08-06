@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
 import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
-// import useFetch from 'use-http'
-import useFetch from 'react-hook-usefetch'
-import { Context } from './Store'
 
 const util = {}
 export default util
@@ -70,27 +67,46 @@ util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
   )
 }
 
-util.getApiData = (apiUrl) => {
-  const { status, error, data } = util.useApi(apiUrl)
-  const merge = { ...data, ...{ status }, ...{ error } }
-  // console.log(merge)
-  return merge
+util.postSlotsUrl = (id) => {
+  return (
+    process.env.REACT_APP_BASE_URL +
+    process.env.REACT_APP_API_POST_ENDPOINT +
+    id
+  )
 }
 
-util.useApi = (url) => {
+util.postApiData = (url, data) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(data),
+  }
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+util.getApiData = (url) => {
   const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR',
   }
-
-  const [data, setData] = React.useState({
+  const [apiData, setApiData] = React.useState({
     status: apiStates.LOADING,
     error: '',
     data: [],
   })
 
-  const setPartData = (partialData) => setData({ ...data, ...partialData })
+  const setPartData = (partialData) =>
+    setApiData({ ...apiData, ...partialData })
 
   React.useEffect(() => {
     setPartData({
@@ -98,10 +114,10 @@ util.useApi = (url) => {
     })
     fetch(url)
       .then((response) => response.json())
-      .then((data) => {
+      .then((responseData) => {
         setPartData({
           status: apiStates.SUCCESS,
-          data,
+          data: responseData,
         })
       })
       .catch(() => {
@@ -111,20 +127,27 @@ util.useApi = (url) => {
         })
       })
   }, [url])
-
-  return data
-}
-
-/**
- *
- * @param {Object} data
- * @param {String} prop
- */
-util.getSlotsDataValue = (data, prop) => {
-  if (typeof data === 'undefined') return null
-  return typeof data.hasOwnProperty(prop) ? data[prop] : null
+  const { status, error, ...other } = apiData
+  const { data } = other
+  const merge = { status, error, ...data }
+  return merge
 }
 
 util.isSlotSelected = (id, selectedSlots) => {
   return typeof selectedSlots[id] !== 'undefined'
+}
+
+util.isDisabled = (status) => {
+  if (!status) {
+    return false
+  }
+  return status !== 'SUCCESS'
+}
+
+util.hasSelection = (selectedBookings) => {
+  if (!selectedBookings) {
+    return false
+  }
+
+  return Object.keys(selectedBookings).length > 0
 }

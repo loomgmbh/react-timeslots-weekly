@@ -3,6 +3,8 @@ import moment from 'moment'
 import Reducer from './Reducer'
 import util from './utility'
 
+const locale = 'de'
+
 const formats = {
   classRoot: 'booking-calendar',
   firstDay: 'monday',
@@ -15,10 +17,10 @@ const formats = {
   slotTimeFormat: 'H.mm',
   slotTimeFieldFormat: 'YYYY-MM-DDTHH:mm:ss',
   footerSelectedTimeFormat: 'D. MM, H.mm',
-  locale: 'de',
+  locale,
 }
 const productId = util.getProductId()
-const curDate = util.getDate()
+const curDate = util.getDate(null, locale)
 const startDay = util.getStartDay(curDate)
 const endDay = util.getEndDay(startDay)
 const apiUrl = util.getSlotsUrl(
@@ -27,8 +29,10 @@ const apiUrl = util.getSlotsUrl(
   endDay,
   formats.slotTimeFieldFormat
 )
+const apiPostUrl = util.postSlotsUrl(productId)
 const query = {
   apiUrl,
+  apiPostUrl,
   productId,
   curDate,
   startDay,
