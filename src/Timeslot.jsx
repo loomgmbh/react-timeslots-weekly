@@ -28,6 +28,7 @@ const Timeslot = (props) => {
     const updated = !selected
     setSelected(updated)
     util.updateBookings(updated, slotStart, slotEnd, dispatch)
+    window.location.reload(false)
   }
 
   const isDisabled = () => start.isBefore(moment())
