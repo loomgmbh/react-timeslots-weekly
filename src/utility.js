@@ -7,7 +7,8 @@ const util = {}
 export default util
 
 util.getProductId = () => {
-  return 'dev' ? 201 : drupalSettings.bookingCalendar.productId
+  return drupalSettings.bookingCalendar.productId || 201
+  // return 'dev' ? 201 : drupalSettings.bookingCalendar.productId
 }
 
 util.getDate = (initialDate, locale = process.env.REACT_APP_LOCALE) => {
