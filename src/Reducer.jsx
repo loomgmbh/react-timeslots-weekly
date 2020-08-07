@@ -1,19 +1,25 @@
 const Reducer = (state, action) => {
   const {openBookings, selectedBookings, query, timeslots} = state
   switch (action.type) {
+    case 'SET_CLIENT':
+      return {
+        ...state,
+        client: action.payload,
+      }
+
     case 'SET_QUERY':
       return {
         ...state,
         query: action.payload,
       }
 
-      case 'SET_TIMESLOTS':
+    case 'SET_TIMESLOTS':
       return {
         ...state,
         timeslots: action.payload,
       }
 
-      case 'SET_STATUS':
+    case 'SET_STATUS':
       return {
         ...state,
         status: action.payload,
@@ -24,20 +30,20 @@ const Reducer = (state, action) => {
         ...state,
         openBookings: action.payload,
       }
-    case 'ADD_BOOKING':
-      const booking = action.payload.start ?? null
-      openBookings[booking] = action.payload
-      return {
-        ...state,
-        openBookings: openBookings,
-      }
-    case 'REMOVE_BOOKING':
-      // const { selectedBookings } = state
-      delete openBookings[action.payload]
-      return {
-        ...state,
-        openBookings,
-      }
+    // case 'ADD_BOOKING':
+    //   const booking = action.payload.start ?? null
+    //   openBookings[booking] = action.payload
+    //   return {
+    //     ...state,
+    //     openBookings: openBookings,
+    //   }
+    // case 'REMOVE_BOOKING':
+    //   // const { selectedBookings } = state
+    //   delete openBookings[action.payload]
+    //   return {
+    //     ...state,
+    //     openBookings,
+    //   }
 
       case 'SET_SELECTED_BOOKINGS':
       return {

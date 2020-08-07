@@ -4,17 +4,17 @@ import util from './utility'
 
 const Details = () => {
   const [state] = useContext(Context)
-  const { selectedBookings, query, formats } = state
-  const { startDay, endDay, apiUrl } = query
+  const { selectedBookings, query, client, formats } = state
+  const { startDay, endDay } = query
   const { classRoot, footerSelectedTimeFormat } = formats
-
+  const { ipData } = client
+  const ipAddress = util.getIp(ipData)
   const classRootMod = `${classRoot}--footer`
-  const selectedCount = Object.keys(selectedBookings).length
+
   const renderSelectedBookings = () => {
     return (
-      selectedCount > 0 && (
+      util.hasSelection(selectedBookings) && (
         <div>
-          <h5>{Object.keys(selectedBookings).length} selected</h5>
           {Object.entries(selectedBookings).map(([key, value]) => {
             const date = util.getDate(key)
             return (
@@ -27,14 +27,15 @@ const Details = () => {
       )
     )
   }
-  console.log()
+
   return (
     <div className={classRootMod}>
       {process.env.NODE_ENV === 'development' && (
         <>
           <h3>Start {startDay.format('DD.MM.')}</h3>
           <h3>End {endDay.format('DD.MM.')}</h3>
-          <h5>Url: {apiUrl}</h5>
+          <h5>ip: {ipAddress}</h5>
+          <h5>{Object.keys(selectedBookings).length} selected</h5>
         </>
       )}
       {renderSelectedBookings()}

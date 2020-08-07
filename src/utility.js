@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
 import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
-// import useFetch from 'use-http'
-import useFetch from 'react-hook-usefetch'
-import { Context } from './Store'
+import fp from 'fingerprintjs2'
 
 const util = {}
 export default util
@@ -46,16 +44,15 @@ util.getBookingsForDay = (day, slots) => {
   return typeof slots[index] !== 'undefined' ? slots[index] : []
 }
 
-util.updateBookings = (selected, value, dispatch) => {
+util.updateBookings = (selected, selectedStart, selectedEnd, dispatch) => {
   if (selected) {
     const slot = {
-      start: value,
-      end: '@todo',
-      duration: '@todo',
+      start: selectedStart,
+      end: selectedEnd,
     }
     dispatch({ type: 'ADD_SELECTED_BOOKING', payload: slot })
   } else {
-    dispatch({ type: 'REMOVE_SELECTED_BOOKING', payload: value })
+    dispatch({ type: 'REMOVE_SELECTED_BOOKING', payload: selectedStart })
   }
 }
 
@@ -70,27 +67,46 @@ util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
   )
 }
 
-util.getApiData = (apiUrl) => {
-  const { status, error, data } = util.useApi(apiUrl)
-  const merge = { ...data, ...{ status }, ...{ error } }
-  // console.log(merge)
-  return merge
+util.postSlotsUrl = (id) => {
+  return (
+    process.env.REACT_APP_BASE_URL +
+    process.env.REACT_APP_API_POST_ENDPOINT +
+    id
+  )
 }
 
-util.useApi = (url) => {
+util.postApiData = (url, data) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(data),
+  }
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+util.getApiData = (url) => {
   const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR',
   }
-
-  const [data, setData] = React.useState({
+  const [apiData, setApiData] = React.useState({
     status: apiStates.LOADING,
     error: '',
     data: [],
   })
 
-  const setPartData = (partialData) => setData({ ...data, ...partialData })
+  const setPartData = (partialData) =>
+    setApiData({ ...apiData, ...partialData })
 
   React.useEffect(() => {
     setPartData({
@@ -98,10 +114,10 @@ util.useApi = (url) => {
     })
     fetch(url)
       .then((response) => response.json())
-      .then((data) => {
+      .then((responseData) => {
         setPartData({
           status: apiStates.SUCCESS,
-          data,
+          data: responseData,
         })
       })
       .catch(() => {
@@ -111,20 +127,93 @@ util.useApi = (url) => {
         })
       })
   }, [url])
-
-  return data
-}
-
-/**
- *
- * @param {Object} data
- * @param {String} prop
- */
-util.getSlotsDataValue = (data, prop) => {
-  if (typeof data === 'undefined') return null
-  return typeof data.hasOwnProperty(prop) ? data[prop] : null
+  const { status, error, ...other } = apiData
+  const { data } = other
+  const merge = { status, error, ...data }
+  return merge
 }
 
 util.isSlotSelected = (id, selectedSlots) => {
   return typeof selectedSlots[id] !== 'undefined'
+}
+
+util.isDisabled = (status) => {
+  if (!status) {
+    return false
+  }
+  return status !== 'SUCCESS'
+}
+
+util.hasSelection = (selectedBookings) => {
+  if (!selectedBookings) {
+    return false
+  }
+
+  return Object.keys(selectedBookings).length > 0
+}
+
+util.cleanData = (f) => {
+  for (const key in f) {
+    if (f[key] === null || f[key] === undefined || f[key] instanceof Error) {
+      delete f[key]
+    }
+    if (Array.isArray(f[key])) {
+      f[key] = f[key].join(', ')
+    }
+    if (
+      (typeof f[key] === 'string' || f[key] instanceof String) &&
+      f[key].length === 0
+    ) {
+      delete f[key]
+    }
+    if (typeof f[key] === 'boolean') {
+      f[key] = `${f[key]}`
+    }
+  }
+
+  return f
+}
+
+util.getFingerprint = () =>
+  new Promise((resolve) => {
+    fp.get((components) => {
+      resolve(components)
+    })
+  })
+
+util.getClientData = () => {
+  const [fingerprint, setFingerprint] = React.useState(null)
+  const [ipData, setIpData] = React.useState(null)
+  const [showReport, setShowReport] = React.useState(true)
+
+  React.useEffect(() => {
+    if (showReport) {
+      fetch('https://extreme-ip-lookup.com/json')
+        .then((res) => res.json())
+        .then((ip) => Promise.all([ip, util.getFingerprint()]))
+        .then(([ip, finger]) => {
+          let f = finger
+            .map(({ key, value }) => ({ [key]: value }))
+            .reduce((acc, curr) => ({
+              ...acc,
+              ...curr,
+            }))
+
+          f = util.cleanData(f)
+          ip = util.cleanData(ip)
+
+          setFingerprint(f)
+          setIpData(ip)
+          setShowReport(false)
+        })
+    }
+  }, [showReport])
+  return { fingerprint, ipData }
+}
+
+util.getIp = (ipData) => {
+  if (ipData === null) return null
+  if (typeof ipData === 'undefined') return null
+  const { query } = ipData
+  return query
 }
