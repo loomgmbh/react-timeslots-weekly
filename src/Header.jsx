@@ -1,10 +1,9 @@
 import React, { useContext } from 'react'
-import Store, { Context } from './Store'
+import { Context } from './Store'
 
 const Title = () => {
   const [state] = useContext(Context)
   const { query, formats } = state
-
   const { classRoot, dateTitleStartProps, dateTitleEndProps } = formats
   const classRootMod = `${classRoot}--title`
   const { weekNumber, startDay, endDay } = query
@@ -12,7 +11,9 @@ const Title = () => {
   return (
     <div className={classRootMod}>
       <h4>
-        <span>KW: {weekNumber}, </span>
+        <span className={`${classRootMod}__calendar-week`}>
+          KW: {weekNumber},{' '}
+        </span>
         <span>
           {startDay.format(dateTitleStartProps)}{' '}
           {endDay.format(dateTitleEndProps)}

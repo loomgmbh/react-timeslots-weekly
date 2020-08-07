@@ -49,6 +49,7 @@ const initialState = {
   timeslots: [],
   query,
   formats,
+  client: {},
   status: null,
   error: null,
 }

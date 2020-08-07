@@ -1,6 +1,7 @@
 import React from 'react'
 import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
+import fp from 'fingerprintjs2'
 
 const util = {}
 export default util
@@ -43,16 +44,15 @@ util.getBookingsForDay = (day, slots) => {
   return typeof slots[index] !== 'undefined' ? slots[index] : []
 }
 
-util.updateBookings = (selected, value, dispatch) => {
+util.updateBookings = (selected, selectedStart, selectedEnd, dispatch) => {
   if (selected) {
     const slot = {
-      start: value,
-      end: '@todo',
-      duration: '@todo',
+      start: selectedStart,
+      end: selectedEnd,
     }
     dispatch({ type: 'ADD_SELECTED_BOOKING', payload: slot })
   } else {
-    dispatch({ type: 'REMOVE_SELECTED_BOOKING', payload: value })
+    dispatch({ type: 'REMOVE_SELECTED_BOOKING', payload: selectedStart })
   }
 }
 
@@ -150,4 +150,70 @@ util.hasSelection = (selectedBookings) => {
   }
 
   return Object.keys(selectedBookings).length > 0
+}
+
+util.cleanData = (f) => {
+  for (const key in f) {
+    if (f[key] === null || f[key] === undefined || f[key] instanceof Error) {
+      delete f[key]
+    }
+    if (Array.isArray(f[key])) {
+      f[key] = f[key].join(', ')
+    }
+    if (
+      (typeof f[key] === 'string' || f[key] instanceof String) &&
+      f[key].length === 0
+    ) {
+      delete f[key]
+    }
+    if (typeof f[key] === 'boolean') {
+      f[key] = `${f[key]}`
+    }
+  }
+
+  return f
+}
+
+util.getFingerprint = () =>
+  new Promise((resolve) => {
+    fp.get((components) => {
+      resolve(components)
+    })
+  })
+
+util.getClientData = () => {
+  const [fingerprint, setFingerprint] = React.useState(null)
+  const [ipData, setIpData] = React.useState(null)
+  const [showReport, setShowReport] = React.useState(true)
+
+  React.useEffect(() => {
+    if (showReport) {
+      fetch('https://extreme-ip-lookup.com/json')
+        .then((res) => res.json())
+        .then((ip) => Promise.all([ip, util.getFingerprint()]))
+        .then(([ip, finger]) => {
+          let f = finger
+            .map(({ key, value }) => ({ [key]: value }))
+            .reduce((acc, curr) => ({
+              ...acc,
+              ...curr,
+            }))
+
+          f = util.cleanData(f)
+          ip = util.cleanData(ip)
+
+          setFingerprint(f)
+          setIpData(ip)
+          setShowReport(false)
+        })
+    }
+  }, [showReport])
+  return { fingerprint, ipData }
+}
+
+util.getIp = (ipData) => {
+  if (ipData === null) return null
+  if (typeof ipData === 'undefined') return null
+  const { query } = ipData
+  return query
 }

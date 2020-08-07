@@ -12,7 +12,9 @@ const Timeslot = (props) => {
   const { slotTimeFormat, slotTimeFieldFormat, classRoot } = formats
   const start = moment(timeslot.start)
   const startTime = start.format(slotTimeFormat)
+  const end = moment(timeslot.end)
   const date = start.format(slotTimeFieldFormat)
+  const endDate = end.format(slotTimeFieldFormat)
   const init = util.isSlotSelected(date, selectedBookings)
   const [selected, setSelected] = useState(init)
 
@@ -22,11 +24,10 @@ const Timeslot = (props) => {
     'btn--selected': selected,
   })
 
-  const onClick = (e) => {
-    const selectedDate = e.target.name
+  const onClick = (slotStart, slotEnd) => {
     const updated = !selected
     setSelected(updated)
-    util.updateBookings(updated, selectedDate, dispatch)
+    util.updateBookings(updated, slotStart, slotEnd, dispatch)
   }
 
   const isDisabled = () => start.isBefore(moment())
@@ -39,7 +40,8 @@ const Timeslot = (props) => {
         type="submit"
         className={buttonClasses}
         name={date}
-        onClick={onClick}
+        end={endDate}
+        onClick={() => onClick(date, endDate)}
         disabled={isDisabled()}
       >
         {startTime}
