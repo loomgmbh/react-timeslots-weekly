@@ -17,6 +17,7 @@ const Submit = () => {
       ipData,
       productId,
     })
+    window.location.reload(false)
   }
 
   const classRootMod = `${classRoot}--submit`
