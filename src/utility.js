@@ -7,8 +7,10 @@ const util = {}
 export default util
 
 util.getProductId = () => {
-  return drupalSettings.bookingCalendar.productId || 201
-  // return 'dev' ? 201 : drupalSettings.bookingCalendar.productId
+  if (util.isDevelopment()) return 201
+  if (!(typeof drupalSettings === 'undefined')) {
+    return drupalSettings.bookingCalendar.productId
+  }
 }
 
 util.getDate = (initialDate, locale = process.env.REACT_APP_LOCALE) => {
@@ -217,4 +219,8 @@ util.getIp = (ipData) => {
   if (typeof ipData === 'undefined') return null
   const { query } = ipData
   return query
+}
+
+util.isDevelopment = () => {
+  return process.env.NODE_ENV === 'development'
 }

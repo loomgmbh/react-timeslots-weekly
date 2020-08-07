@@ -30,7 +30,7 @@ const Details = () => {
 
   return (
     <div className={classRootMod}>
-      {process.env.NODE_ENV === 'development' && (
+      {util.isDevelopment() && (
         <>
           <h3>Start {startDay.format('DD.MM.')}</h3>
           <h3>End {endDay.format('DD.MM.')}</h3>
