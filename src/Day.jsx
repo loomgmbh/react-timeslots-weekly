@@ -16,6 +16,9 @@ const Day = (props) => {
     classRoot,
   } = formats
 
+
+  // console.log(openBookings)
+
   const dayBookings = util.getBookingsForDay(dateObj, openBookings)
   const classRootMod = `${classRoot}--day`
 

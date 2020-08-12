@@ -45,8 +45,9 @@ const query = {
 
 const initialState = {
   openBookings: {},
-  selectedBookings: {},
   timeslots: [],
+  apiData: {},
+  selectedBookings: {},
   query,
   formats,
   client: {},

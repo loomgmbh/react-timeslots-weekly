@@ -4,12 +4,14 @@ import util from './utility'
 
 const Details = () => {
   const [state] = useContext(Context)
-  const { selectedBookings, query, client, formats } = state
-  const { startDay, endDay } = query
+  const { selectedBookings, openBookings, query, client, formats } = state
+  const { startDay, endDay, apiUrl } = query
   const { classRoot, footerSelectedTimeFormat } = formats
   const { ipData } = client
   const ipAddress = util.getIp(ipData)
   const classRootMod = `${classRoot}--footer`
+
+  // console.log(openBookings)
 
   const renderSelectedBookings = () => {
     return (
@@ -36,6 +38,7 @@ const Details = () => {
           <h3>End {endDay.format('DD.MM.')}</h3>
           <h5>ip: {ipAddress}</h5>
           <h5>{Object.keys(selectedBookings).length} selected</h5>
+          <h5>get: {apiUrl}</h5>
         </>
       )}
       {renderSelectedBookings()}

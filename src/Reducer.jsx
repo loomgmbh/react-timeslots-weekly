@@ -1,6 +1,16 @@
 const Reducer = (state, action) => {
-  const {openBookings, selectedBookings, query, timeslots} = state
+  const {apiData, selectedBookings} = state
   switch (action.type) {
+    case 'UPDATE_API_DATA':
+      const {bookings, slots, apiUrl} = action.payload
+      const thisData = {}
+      thisData[apiUrl] = {bookings, slots}
+      const newCache = {...apiData, ...thisData}
+      return {
+        ...state,
+        apiData: newCache,
+      }
+
     case 'SET_CLIENT':
       return {
         ...state,

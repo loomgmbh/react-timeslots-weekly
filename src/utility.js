@@ -96,12 +96,37 @@ util.postApiData = (url, data) => {
     })
 }
 
-util.getApiData = (url) => {
+util.getMoreApiData = (url, cache) => {
+  // const value = e.target.value ?? 0
+  // const steps = parseInt(value) * parseInt(daySteps)
+  // const newDay = startDay.clone().add(steps, 'days')
+  // const newEndDay = newDay.clone().add(1, 'week').subtract(1, 'second')
+  // const newWeekNumber = parseInt(weekNumber) + parseInt(value)
+  // const newUrl = util.getSlotsUrl(
+  //   productId,
+  //   newDay,
+  //   newEndDay,
+  //   slotTimeFieldFormat
+  // )
+  // const changes = {
+  //   apiUrl: newUrl,
+  //   startDay: newDay,
+  //   endDay: newEndDay,
+  //   weekNumber: newWeekNumber,
+  //   daysOfWeek: util.getDaysOfWeek(newDay, daySteps),
+  // }    
+  // const payload = {...query, ...changes}
+  // dispatch({ type: 'SET_QUERY', payload: payload })
+
+}
+
+util.getApiData = (url, cache) => {
   const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR',
   }
+  
   const [apiData, setApiData] = React.useState({
     status: apiStates.LOADING,
     error: '',
@@ -112,27 +137,37 @@ util.getApiData = (url) => {
     setApiData({ ...apiData, ...partialData })
 
   React.useEffect(() => {
-    setPartData({
-      status: apiStates.LOADING,
-    })
-    fetch(url)
-      .then((response) => response.json())
-      .then((responseData) => {
-        setPartData({
-          status: apiStates.SUCCESS,
-          data: responseData,
-        })
+    const thisData = cache[url] || null
+    if (thisData) {
+      setPartData({
+        status: apiStates.SUCCESS,
+        data: thisData,
       })
-      .catch(() => {
-        setPartData({
-          status: apiStates.ERROR,
-          error: 'fetch failed',
-        })
+    }
+    else {
+      setPartData({
+        status: apiStates.LOADING,
       })
+      fetch(url)
+        .then((response) => response.json())
+        .then((responseData) => {
+          setPartData({
+            status: apiStates.SUCCESS,
+            data: responseData,
+          })
+        })
+        .catch(() => {
+          setPartData({
+            status: apiStates.ERROR,
+            error: 'fetch failed',
+          })
+        })      
+    }
   }, [url])
   const { status, error, ...other } = apiData
   const { data } = other
   const merge = { status, error, ...data }
+  // console.log(apiData)
   return merge
 }
 

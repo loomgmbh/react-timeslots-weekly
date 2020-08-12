@@ -19,8 +19,9 @@ const Controls = props => {
   const handleClick = (e) => {
     const value = e.target.value ?? 0
     const steps = parseInt(value) * parseInt(daySteps)
+    console.log(steps)
     const newDay = startDay.clone().add(steps, 'days')
-    const newEndDay = newDay.clone().add(steps - 1, 'days')
+    const newEndDay = newDay.clone().add(1, 'week').subtract(1, 'second')
     const newWeekNumber = parseInt(weekNumber) + parseInt(value)
     const newUrl = util.getSlotsUrl(
       productId,
