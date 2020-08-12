@@ -27,11 +27,7 @@ const Submit = () => {
         type="submit"
         className={`btn btn--${classRootMod}`}
         name="submit"
-        disabled={
-          util.isDisabled(status) ||
-          !util.hasSelection(selectedBookings) ||
-          ipData === null
-        }
+        disabled={util.submitIsDisabled(status, selectedBookings, ipData)}
         onClick={handleClick}
       >
         Termin buchen

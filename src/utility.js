@@ -244,3 +244,11 @@ util.getIp = (ipData) => {
 util.isDevelopment = () => {
   return process.env.NODE_ENV === 'development'
 }
+
+util.submitIsDisabled = (status, selectedBookings, ipData) => {
+  return (
+    util.isDisabled(status) ||
+    !util.hasSelection(selectedBookings) ||
+    ipData === null
+  )
+}
