@@ -17,7 +17,7 @@ const Submit = () => {
       ipData,
       productId,
     })
-    window.location.reload(false)
+    window.location.replace(window.location.href)
   }
 
   const classRootMod = `${classRoot}--submit`

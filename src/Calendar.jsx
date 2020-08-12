@@ -24,7 +24,6 @@ const Calendar = () => {
     }
   }
 
-
   useEffect(() => {
     if (clientData) {
       dispatch({ type: 'SET_CLIENT', payload: clientData })
@@ -45,8 +44,6 @@ const Calendar = () => {
       dispatch({ type: 'UPDATE_API_DATA', payload: {bookings, slots, apiUrl} })
     }
   }, [apiUrl, bookings, slots, status, error])
-
-  // console.log(apiData)
 
   return (
     <div className={classRoot}>
