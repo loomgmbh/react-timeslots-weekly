@@ -38,6 +38,8 @@ const query = {
   startDay,
   endDay,
   currentWeekNumber: util.getWeekNumber(curDate),
+  prefetchWeekNumber: util.getWeekNumber(curDate),
+  prefetchDiffMin: 4,
   weekNumber: util.getWeekNumber(curDate),
   daysOfWeek: util.getDaysOfWeek(startDay),
   daySteps: 7,

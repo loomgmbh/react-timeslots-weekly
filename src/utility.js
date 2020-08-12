@@ -59,7 +59,8 @@ util.updateBookings = (selected, selectedStart, selectedEnd, dispatch) => {
   }
 }
 
-util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat) => {
+util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat, offset = null) => {
+
   return (
     `${
       process.env.REACT_APP_BASE_URL +
@@ -96,31 +97,16 @@ util.postApiData = (url, data) => {
     })
 }
 
-util.getMoreApiData = (url, cache) => {
-  // const value = e.target.value ?? 0
-  // const steps = parseInt(value) * parseInt(daySteps)
-  // const newDay = startDay.clone().add(steps, 'days')
-  // const newEndDay = newDay.clone().add(1, 'week').subtract(1, 'second')
-  // const newWeekNumber = parseInt(weekNumber) + parseInt(value)
-  // const newUrl = util.getSlotsUrl(
-  //   productId,
-  //   newDay,
-  //   newEndDay,
-  //   slotTimeFieldFormat
-  // )
-  // const changes = {
-  //   apiUrl: newUrl,
-  //   startDay: newDay,
-  //   endDay: newEndDay,
-  //   weekNumber: newWeekNumber,
-  //   daysOfWeek: util.getDaysOfWeek(newDay, daySteps),
-  // }    
-  // const payload = {...query, ...changes}
-  // dispatch({ type: 'SET_QUERY', payload: payload })
-
+util.doPrefetch = (startDay, endDay, productId, slotTimeFieldFormat) => {
+  const newStart = startDay.clone().add(1, 'week')
+  const newEnd = startDay.clone().add(1, 'week')
+  const getMoreUrl = util.getSlotsUrl(productId, newStart, newEnd, slotTimeFieldFormat)
+  const moreData = util.getApiData(getMoreUrl)
+  console.log(getMoreUrl)
+  console.log(moreData)
 }
 
-util.getApiData = (url, cache) => {
+util.getApiData = (url, cache = {}) => {
   const apiStates = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
@@ -167,7 +153,6 @@ util.getApiData = (url, cache) => {
   const { status, error, ...other } = apiData
   const { data } = other
   const merge = { status, error, ...data }
-  // console.log(apiData)
   return merge
 }
 

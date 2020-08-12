@@ -1,5 +1,5 @@
 const Reducer = (state, action) => {
-  const {apiData, selectedBookings} = state
+  const {apiData, selectedBookings, query} = state
   switch (action.type) {
     case 'UPDATE_API_DATA':
       const {bookings, slots, apiUrl} = action.payload
@@ -21,6 +21,12 @@ const Reducer = (state, action) => {
       return {
         ...state,
         query: action.payload,
+      }
+
+      case 'UPDATE_QUERY':
+      return {
+        ...state,
+        query: {query, ...action.payload},
       }
 
     case 'SET_TIMESLOTS':

@@ -11,11 +11,19 @@ import util from './utility'
 const Calendar = () => {
   const [state, dispatch] = useContext(Context)
   const { query, formats, error, apiData } = state
-  const { classRoot } = formats
+  const { classRoot, slotTimeFieldFormat } = formats
   const clientData = util.getClientData()
-  const { apiUrl } = query
+  const { apiUrl, startDay, endDay, currentWeekNumber, prefetchWeekNumber, prefetchDiffMin, productId } = query
   const newApiData = util.getApiData(apiUrl, apiData)
   const { status, bookings, slots } = newApiData
+
+  if (apiData) {
+    if (prefetchWeekNumber - currentWeekNumber < prefetchDiffMin) {
+      // @todo.
+      // util.doPrefetch(startDay, endDay, productId, slotTimeFieldFormat)
+    }
+  }
+
 
   useEffect(() => {
     if (clientData) {
@@ -36,9 +44,9 @@ const Calendar = () => {
     if (bookings, slots, apiUrl) {
       dispatch({ type: 'UPDATE_API_DATA', payload: {bookings, slots, apiUrl} })
     }
-  }, [apiUrl, bookings, slots, query, status, error])
+  }, [apiUrl, bookings, slots, status, error])
 
-  console.log(apiData)
+  // console.log(apiData)
 
   return (
     <div className={classRoot}>
