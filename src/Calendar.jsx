@@ -13,16 +13,24 @@ const Calendar = () => {
   const { query, formats, error, apiData } = state
   const { classRoot, slotTimeFieldFormat } = formats
   const clientData = util.getClientData()
-  const { apiUrl, startDay, endDay, currentWeekNumber, prefetchWeekNumber, prefetchDiffMin, productId } = query
+  const { 
+    apiUrl, 
+    startDay, 
+    endDay, 
+    currentWeekNumber, 
+    prefetchWeekNumber, 
+    prefetchDiffMin, 
+    productId 
+  } = query
   const newApiData = util.getApiData(apiUrl, apiData)
   const { status, bookings, slots } = newApiData
-
-  if (apiData) {
-    if (prefetchWeekNumber - currentWeekNumber < prefetchDiffMin) {
-      // @todo.
-      // util.doPrefetch(startDay, endDay, productId, slotTimeFieldFormat)
-    }
-  }
+  
+  // @todo.
+  // if (apiData) {
+  //   if (prefetchWeekNumber - currentWeekNumber < prefetchDiffMin) {
+  //     util.doPrefetch(startDay, endDay, productId, slotTimeFieldFormat)
+  //   }
+  // }
 
   useEffect(() => {
     if (clientData) {
@@ -44,6 +52,8 @@ const Calendar = () => {
       dispatch({ type: 'UPDATE_API_DATA', payload: {bookings, slots, apiUrl} })
     }
   }, [apiUrl, bookings, slots, status, error])
+
+  console.log(apiData)
 
   return (
     <div className={classRoot}>
