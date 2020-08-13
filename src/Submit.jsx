@@ -25,7 +25,7 @@ const Submit = () => {
     <div className={classRootMod}>
       <button
         type="submit"
-        className={`btn btn--${classRootMod}`}
+        className={`button button--${classRootMod}`}
         name="submit"
         disabled={util.submitIsDisabled(status, selectedBookings, apiData)}
         onClick={handleClick}
