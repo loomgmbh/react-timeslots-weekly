@@ -13,18 +13,18 @@ const Calendar = () => {
   const { query, formats, error, apiData } = state
   const { classRoot, slotTimeFieldFormat } = formats
   const clientData = util.getClientData()
-  const { 
-    apiUrl, 
-    startDay, 
-    endDay, 
-    currentWeekNumber, 
-    prefetchWeekNumber, 
-    prefetchDiffMin, 
-    productId 
+  const {
+    apiUrl,
+    startDay,
+    endDay,
+    currentWeekNumber,
+    prefetchWeekNumber,
+    prefetchDiffMin,
+    productId,
   } = query
   const newApiData = util.getApiData(apiUrl, apiData)
   const { status, bookings, slots } = newApiData
-  
+
   // @todo.
   // if (apiData) {
   //   if (prefetchWeekNumber - currentWeekNumber < prefetchDiffMin) {
@@ -48,12 +48,15 @@ const Calendar = () => {
     if (error) {
       dispatch({ type: 'SET_ERROR', payload: error })
     }
-    if (bookings, slots, apiUrl) {
-      dispatch({ type: 'UPDATE_API_DATA', payload: {bookings, slots, apiUrl} })
+    if ((bookings, slots, apiUrl)) {
+      dispatch({
+        type: 'UPDATE_API_DATA',
+        payload: { bookings, slots, apiUrl },
+      })
     }
   }, [apiUrl, bookings, slots, status, error])
 
-  console.log(apiData)
+  console.log(bookings)
 
   return (
     <div className={classRoot}>

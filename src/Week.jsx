@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Context } from './Store'
 import Day from './Day'
 
-const Week = (props) => {
+const Week = () => {
   const [state] = useContext(Context)
   const { query, formats } = state
   const { daysOfWeek } = query
