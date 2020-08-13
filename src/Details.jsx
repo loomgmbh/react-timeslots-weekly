@@ -38,7 +38,8 @@ const Details = () => {
           <h3>End {endDay.format('DD.MM.')}</h3>
           <h5>ip: {ipAddress}</h5>
           <h5>{Object.keys(selectedBookings).length} selected</h5>
-          <h5>get: {apiUrl}</h5>
+          <h5>get:</h5>
+          <h4>{apiUrl}</h4>
         </>
       )}
       {renderSelectedBookings()}

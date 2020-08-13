@@ -56,7 +56,7 @@ const Calendar = () => {
     }
   }, [apiUrl, bookings, slots, status, error])
 
-  console.log(bookings)
+  // console.log(bookings)
 
   return (
     <div className={classRoot}>

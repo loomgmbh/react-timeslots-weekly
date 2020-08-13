@@ -59,8 +59,13 @@ util.updateBookings = (selected, selectedStart, selectedEnd, dispatch) => {
   }
 }
 
-util.getSlotsUrl = (id, startDateObj, endDateObj, slotTimeFieldFormat, offset = null) => {
-
+util.getSlotsUrl = (
+  id,
+  startDateObj,
+  endDateObj,
+  slotTimeFieldFormat,
+  offset = null
+) => {
   return (
     `${
       process.env.REACT_APP_BASE_URL +
@@ -97,14 +102,19 @@ util.postApiData = (url, data) => {
     })
 }
 
-util.doPrefetch = (startDay, endDay, productId, slotTimeFieldFormat) => {
-  const newStart = startDay.clone().add(1, 'week')
-  const newEnd = startDay.clone().add(1, 'week')
-  const getMoreUrl = util.getSlotsUrl(productId, newStart, newEnd, slotTimeFieldFormat)
-  const moreData = util.getApiData(getMoreUrl)
-  console.log(getMoreUrl)
-  console.log(moreData)
-}
+// util.doPrefetch = (startDay, endDay, productId, slotTimeFieldFormat) => {
+//   const newStart = startDay.clone().add(1, 'week')
+//   const newEnd = startDay.clone().add(1, 'week')
+//   const getMoreUrl = util.getSlotsUrl(
+//     productId,
+//     newStart,
+//     newEnd,
+//     slotTimeFieldFormat
+//   )
+//   const moreData = util.getApiData(getMoreUrl)
+//   console.log(getMoreUrl)
+//   console.log(moreData)
+// }
 
 util.getApiData = (url, cache = {}) => {
   const apiStates = {
@@ -112,7 +122,7 @@ util.getApiData = (url, cache = {}) => {
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR',
   }
-  
+
   const [apiData, setApiData] = React.useState({
     status: apiStates.LOADING,
     error: '',
@@ -129,8 +139,7 @@ util.getApiData = (url, cache = {}) => {
         status: apiStates.SUCCESS,
         data: thisData,
       })
-    }
-    else {
+    } else {
       setPartData({
         status: apiStates.LOADING,
       })
@@ -147,7 +156,7 @@ util.getApiData = (url, cache = {}) => {
             status: apiStates.ERROR,
             error: 'fetch failed',
           })
-        })      
+        })
     }
   }, [url])
   const { status, error, ...other } = apiData
@@ -245,10 +254,11 @@ util.isDevelopment = () => {
   return process.env.NODE_ENV === 'development'
 }
 
-util.submitIsDisabled = (status, selectedBookings, ipData) => {
+util.submitIsDisabled = (status, selectedBookings, apiData) => {
+  console.log(apiData)
   return (
     util.isDisabled(status) ||
     !util.hasSelection(selectedBookings) ||
-    ipData === null
+    apiData === null
   )
 }
