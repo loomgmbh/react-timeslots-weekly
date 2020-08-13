@@ -255,7 +255,6 @@ util.isDevelopment = () => {
 }
 
 util.submitIsDisabled = (status, selectedBookings, apiData) => {
-  console.log(apiData)
   return (
     util.isDisabled(status) ||
     !util.hasSelection(selectedBookings) ||
