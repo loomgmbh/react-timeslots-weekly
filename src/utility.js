@@ -97,6 +97,7 @@ util.postApiData = (url, data) => {
     .then((response) => response.json())
     .then((responseData) => {
       console.log(responseData)
+      window.location.reload(`${window.location.href}#success`)
     })
     .catch((error) => {
       console.log(error)

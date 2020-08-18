@@ -15,7 +15,6 @@ const Submit = () => {
       selected: selectedBookings,
       productId,
     })
-    window.location.reload(false)
   }
 
   const classRootMod = `${classRoot}--submit`
