@@ -13,8 +13,6 @@ const Submit = () => {
   const handleClick = () => {
     util.postApiData(apiPostUrl, {
       selected: selectedBookings,
-      fingerprint,
-      ipData,
       productId,
     })
     window.location.reload(`${window.location.href}#`)

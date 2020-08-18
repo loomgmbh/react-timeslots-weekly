@@ -85,6 +85,7 @@ util.postSlotsUrl = (id) => {
 }
 
 util.postApiData = (url, data) => {
+
   const options = {
     method: 'POST',
     headers: {
