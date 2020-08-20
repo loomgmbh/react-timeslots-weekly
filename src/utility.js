@@ -76,6 +76,34 @@ util.getSlotsUrl = (
   )
 }
 
+util.useFetch = (url, options) => {
+  const [data, setData] = React.useState(null)
+  React.useEffect(() => {
+    const fetchData = async () => {
+      fetch(url)
+        .then((response) => response.json())
+        .then((result) => {
+          setData(result)
+        })
+    }
+    fetchData()
+  }, [data])
+  return { data }
+}
+
+util.getSessionToken = () => {
+  const url = `${process.env.REACT_APP_BASE_URL}/rest/session/token?_format=json`
+  const [data, setData] = React.useState()
+  React.useEffect(() => {
+    fetch(url)
+      .then((response) => response.text())
+      .then((responseData) => {
+        setData(responseData)
+      })
+  }, [url])
+  return data
+}
+
 util.postSlotsUrl = (id) => {
   return (
     process.env.REACT_APP_BASE_URL +
@@ -84,11 +112,13 @@ util.postSlotsUrl = (id) => {
   )
 }
 
-util.postApiData = (url, data) => {
+util.postApiData = (url, data, sessionToken) => {
   const options = {
     method: 'POST',
     headers: {
+      mode: 'no-cors',
       'Content-Type': 'application/json;charset=utf-8',
+      'X-CSRF-Token': sessionToken,
     },
     body: JSON.stringify(data),
   }

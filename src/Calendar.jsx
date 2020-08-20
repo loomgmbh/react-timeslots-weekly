@@ -23,6 +23,8 @@ const Calendar = () => {
   } = query
   const newApiData = util.getApiData(apiUrl, apiData)
   const { status, bookings, slots } = newApiData
+  const sessionToken = util.getSessionToken()
+  console.log(sessionToken)
 
   // @todo.
   // if (apiData) {
@@ -32,6 +34,9 @@ const Calendar = () => {
   // }
 
   useEffect(() => {
+    if (sessionToken) {
+      dispatch({ type: 'SET_SESSION_TOKEN', payload: sessionToken })
+    }
     if (bookings) {
       dispatch({ type: 'SET_BOOKINGS', payload: bookings })
     }

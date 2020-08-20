@@ -11,17 +11,29 @@ const Reducer = (state, action) => {
         apiData: newCache,
       }
 
+    case 'SET_SESSION_TOKEN':
+      return {
+        ...state,
+        sessionToken: action.payload,
+      }
+
+      case 'SET_CLIENT':
+      return {
+        ...state,
+        client: action.payload,
+      }
+
     case 'SET_QUERY':
       return {
         ...state,
         query: action.payload,
       }
 
-      case 'UPDATE_QUERY':
-      return {
-        ...state,
-        query: {query, ...action.payload},
-      }
+    // case 'UPDATE_QUERY':
+    //   return {
+    //     ...state,
+    //     query: {query, ...action.payload},
+    //   }
 
     case 'SET_TIMESLOTS':
       return {

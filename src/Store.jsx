@@ -50,6 +50,7 @@ const initialState = {
   timeslots: [],
   apiData: {},
   selectedBookings: {},
+  sessionToken: null,
   query,
   formats,
   status: null,

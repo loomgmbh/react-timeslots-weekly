@@ -6,15 +6,26 @@ import util from './utility'
 
 const Submit = () => {
   const [state] = useContext(Context)
-  const { apiData, selectedBookings, query, formats, status } = state
+  const {
+    apiData,
+    selectedBookings,
+    query,
+    formats,
+    sessionToken,
+    status,
+  } = state
   const { apiPostUrl, productId } = query
   const { classRoot } = formats
 
   const handleClick = () => {
-    util.postApiData(apiPostUrl, {
-      selected: selectedBookings,
-      productId,
-    })
+    util.postApiData(
+      apiPostUrl,
+      {
+        selected: selectedBookings,
+        productId,
+      },
+      sessionToken
+    )
   }
 
   const classRootMod = `${classRoot}--submit`
