@@ -52,7 +52,6 @@ const initialState = {
   selectedBookings: {},
   query,
   formats,
-  client: {},
   status: null,
   error: null,
 }

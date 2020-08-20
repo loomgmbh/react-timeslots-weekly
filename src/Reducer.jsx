@@ -11,12 +11,6 @@ const Reducer = (state, action) => {
         apiData: newCache,
       }
 
-    case 'SET_CLIENT':
-      return {
-        ...state,
-        client: action.payload,
-      }
-
     case 'SET_QUERY':
       return {
         ...state,

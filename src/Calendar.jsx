@@ -12,7 +12,6 @@ const Calendar = () => {
   const [state, dispatch] = useContext(Context)
   const { query, formats, error, apiData } = state
   const { classRoot, slotTimeFieldFormat } = formats
-  const clientData = util.getClientData()
   const {
     apiUrl,
     startDay,
@@ -33,9 +32,6 @@ const Calendar = () => {
   // }
 
   useEffect(() => {
-    if (clientData) {
-      dispatch({ type: 'SET_CLIENT', payload: clientData })
-    }
     if (bookings) {
       dispatch({ type: 'SET_BOOKINGS', payload: bookings })
     }
