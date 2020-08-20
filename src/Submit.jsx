@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { useRouter } from 'state';
-import {useLocation} from "react-router-dom";
+// import { useRouter } from 'state'
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Context } from './Store'
 import util from './utility'
 
 const Submit = () => {
-  const  { pathname, search } = useRouter();
-  const location = useLocation();  console.log(location);
+  const location = useLocation()
+  console.log(location)
   const [state] = useContext(Context)
   const { apiData, selectedBookings, query, formats, client, status } = state
   const { apiPostUrl, productId } = query
@@ -24,17 +24,12 @@ const Submit = () => {
         top: 0,
         left: 0,
         behavior: 'smooth',
-      });
-    } 
-    catch (error) {
+      })
+    } catch (error) {
       // just a fallback for older browsers
-        window.scrollTo(0, 0);
-      }
-    }, [pathname, search]);
-    // renders nothing, since nothing is needed
-    return null;
-  };
-
+      window.scrollTo(0, 0)
+    }
+  }, [location])
 
   const handleClick = () => {
     util.postApiData(apiPostUrl, {
