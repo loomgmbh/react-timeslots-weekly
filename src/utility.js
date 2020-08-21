@@ -235,6 +235,7 @@ util.hasSelection = (selectedBookings) => {
 
 //   return f
 // }
+// test
 
 util.isDevelopment = () => {
   return process.env.NODE_ENV === 'development'
