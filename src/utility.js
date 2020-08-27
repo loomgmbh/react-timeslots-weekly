@@ -123,14 +123,24 @@ util.postApiData = (url, data, sessionToken) => {
     body: JSON.stringify(data),
   }
   fetch(url, options)
-    .then((response) => response.json())
-    .then((responseData) => {
-      const { success } = responseData
-      if (typeof success !== 'undefined' && typeof document !== 'undefined') {
-        // Trigger cart update.
-        document.getElementsByClassName('cart-block-refresh-button').click()
+    .then((response) => {
+      if (response.ok === true) {
+        console.log(response.ok)
+        if (typeof Drupal !== 'undefined') {
+          Drupal.behaviors.cart.refreshCart()
+          // document.getElementsByClassName('cart-block-refresh-button').click()
+        }
       }
+      // response.json()
     })
+    // .then((responseData) => {
+    //   const { success } = responseData
+    //   console.log(string)
+    //   if (typeof success !== 'undefined' && typeof document !== 'undefined') {
+    //     // Trigger cart update.
+
+    //   }
+    // })
     .catch((error) => {
       console.log(error)
     })
