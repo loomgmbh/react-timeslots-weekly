@@ -6,16 +6,17 @@ import { Context } from './Store'
 import util from './utility'
 
 const Timeslot = (props) => {
-  const { timeslot } = props
   const [state, dispatch] = useContext(Context)
   const { selectedBookings, formats } = state
   const { slotTimeFormat, slotTimeFieldFormat, classRoot } = formats
-  const start = moment(timeslot.start)
-  const startTime = start.format(slotTimeFormat)
-  const end = moment(timeslot.end)
-  const date = start.format(slotTimeFieldFormat)
-  const endDate = end.format(slotTimeFieldFormat)
-  const init = util.isSlotSelected(date, selectedBookings)
+  // const { timeslot } = props
+  const { tid, start, end } = props
+  const startObj = moment(start)
+  const endObj = moment(end)
+  const displayTime = startObj.format(slotTimeFormat)
+  const startDate = startObj.format(slotTimeFieldFormat)
+  const endDate = endObj.format(slotTimeFieldFormat)
+  const init = util.isSlotSelected(startDate, selectedBookings)
   const [selected, setSelected] = useState(init)
 
   const buttonClasses = classNames({
@@ -24,27 +25,27 @@ const Timeslot = (props) => {
     'btn--selected': selected,
   })
 
-  const onClick = (slotStart, slotEnd) => {
+  const handleClick = (slotStart, slotEnd, tid) => {
     const updated = !selected
     setSelected(updated)
-    util.updateBookings(updated, slotStart, slotEnd, dispatch)
+    util.updateBookings(tid, updated, slotStart, slotEnd, dispatch)
   }
 
-  const isDisabled = () => start.isBefore(moment())
+  const isDisabled = () => endObj.isBefore(moment())
 
   const classRootMod = `${classRoot}--slot`
 
   return (
-    <div className={classRootMod} key={date}>
+    <div className={classRootMod} key={startDate}>
       <button
         type="submit"
         className={buttonClasses}
-        name={date}
+        name={startDate}
         end={endDate}
-        onClick={() => onClick(date, endDate)}
+        onClick={() => handleClick(startDate, endDate, tid)}
         disabled={isDisabled()}
       >
-        {startTime}
+        {displayTime}
       </button>
     </div>
   )

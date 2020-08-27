@@ -1,12 +1,9 @@
-import React, { useState, useContext } from 'react'
-import PropTypes from 'prop-types'
-import moment from 'moment'
+import React, { useContext } from 'react'
 import { Context } from './Store'
 import Timeslot from './Timeslot'
 import util from './utility'
 
-const Day = (props) => {
-  const { dateObj } = props
+const Day = ({ dateObj }) => {
   const [state] = useContext(Context)
   const { openBookings, timeslots, formats } = state
   const {
@@ -16,8 +13,6 @@ const Day = (props) => {
     classRoot,
   } = formats
 
-  // console.log(openBookings)
-
   const dayBookings = util.getBookingsForDay(dateObj, openBookings)
   const classRootMod = `${classRoot}--day`
 
@@ -25,7 +20,8 @@ const Day = (props) => {
     if (!dayBookings) return null
     const time = slotTimeObj.format(slotTimeFieldFormat)
     return dayBookings[time] ? (
-      <Timeslot timeslot={dayBookings[time]} />
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      <Timeslot {...dayBookings[time]} />
     ) : (
       <small>{slotTimeObj.format('H.mm')}</small>
     )

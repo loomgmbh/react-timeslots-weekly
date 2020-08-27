@@ -11,20 +11,11 @@ import util from './utility'
 const Calendar = () => {
   const [state, dispatch] = useContext(Context)
   const { query, formats, error, apiData } = state
-  const { classRoot, slotTimeFieldFormat } = formats
-  const {
-    apiUrl,
-    startDay,
-    endDay,
-    currentWeekNumber,
-    prefetchWeekNumber,
-    prefetchDiffMin,
-    productId,
-  } = query
-  const newApiData = util.getApiData(apiUrl, apiData)
-  const { status, bookings, slots } = newApiData
+  const { classRoot } = formats
+  const { apiUrl } = query
+  const getApiData = util.getApiData(apiUrl, apiData)
+  const { status, bookings, slots } = getApiData
   const sessionToken = util.getSessionToken()
-  console.log(sessionToken)
 
   // @todo.
   // if (apiData) {
@@ -56,8 +47,6 @@ const Calendar = () => {
       })
     }
   }, [apiUrl, bookings, slots, status, error])
-
-  // console.log(bookings)
 
   return (
     <div className={classRoot}>

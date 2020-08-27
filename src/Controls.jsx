@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react'
+import PropTypes from 'prop-types'
 import Store, { Context } from './Store'
-import PropTypes from 'prop-types';
-import util from './utility.js'
+import util from './utility'
 
-const Controls = props => {
+const Controls = (props) => {
   const [state, dispatch] = useContext(Context)
-  const {query, formats, status} = state
+  const { query, formats, status } = state
   const {
     productId,
     currentWeekNumber,
@@ -14,12 +14,12 @@ const Controls = props => {
     endDay,
     daySteps,
   } = query
-  const {classRoot, slotTimeFieldFormat} = formats
+  const { classRoot, slotTimeFieldFormat } = formats
 
   const handleClick = (e) => {
-    const value = e.target.value ?? 0
+    const value = e.target.value || 0
     const steps = parseInt(value) * parseInt(daySteps)
-    console.log(steps)
+
     const newDay = startDay.clone().add(steps, 'days')
     const newEndDay = newDay.clone().add(1, 'week').subtract(1, 'second')
     const newWeekNumber = parseInt(weekNumber) + parseInt(value)
@@ -35,20 +35,20 @@ const Controls = props => {
       endDay: newEndDay,
       weekNumber: newWeekNumber,
       daysOfWeek: util.getDaysOfWeek(newDay, daySteps),
-    }    
-    const payload = {...query, ...changes}
-    dispatch({ type: 'SET_QUERY', payload: payload })
+    }
+    const payload = { ...query, ...changes }
+    dispatch({ type: 'SET_QUERY', payload })
   }
 
   const classRootMod = `${classRoot}--controls`
-  return (    
+  return (
     <div className={classRootMod}>
-      <button 
+      <button
         type="button"
         className={`btn btn--${classRootMod}`}
-        name='previous'
-        value='-1'
-        disabled={util.isDisabled(status) || (weekNumber === currentWeekNumber)}
+        name="previous"
+        value="-1"
+        disabled={util.isDisabled(status) || weekNumber === currentWeekNumber}
         onClick={handleClick}
       >
         &#8249;
@@ -56,15 +56,15 @@ const Controls = props => {
       <button
         type="button"
         className={`btn btn--${classRoot}-controls`}
-        name='next'
-        value='1'
+        name="next"
+        value="1"
         onClick={handleClick}
         disabled={util.isDisabled(status)}
       >
         &#8250;
       </button>
     </div>
-  );
+  )
 }
 
 export default Controls

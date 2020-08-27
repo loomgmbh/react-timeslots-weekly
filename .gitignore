@@ -6,4 +6,4 @@ node_modules
 /vendor/
 
 # app
-dist/app.bundle.js
+# dist/app.bundle.js

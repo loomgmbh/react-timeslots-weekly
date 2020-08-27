@@ -1,7 +1,5 @@
 import React from 'react'
-import { useLocalStorage } from '@rehooks/local-storage'
 import moment from 'moment'
-import fp from 'fingerprintjs2'
 
 const util = {}
 export default util
@@ -9,6 +7,7 @@ export default util
 util.getProductId = () => {
   if (util.isDevelopment()) return 201
   if (!(typeof drupalSettings === 'undefined')) {
+    // eslint-disable-next-line no-undef
     return drupalSettings.bookingCalendar.productId
   }
 }
@@ -47,9 +46,10 @@ util.getBookingsForDay = (day, slots) => {
   return typeof slots[index] !== 'undefined' ? slots[index] : []
 }
 
-util.updateBookings = (selected, selectedStart, selectedEnd, dispatch) => {
+util.updateBookings = (tid, selected, selectedStart, selectedEnd, dispatch) => {
   if (selected) {
     const slot = {
+      tid,
       start: selectedStart,
       end: selectedEnd,
     }
@@ -80,7 +80,7 @@ util.useFetch = (url, options) => {
   const [data, setData] = React.useState(null)
   React.useEffect(() => {
     const fetchData = async () => {
-      fetch(url)
+      fetch(url, options)
         .then((response) => response.json())
         .then((result) => {
           setData(result)
@@ -116,7 +116,7 @@ util.postApiData = (url, data, sessionToken) => {
   const options = {
     method: 'POST',
     headers: {
-      mode: 'no-cors',
+      // mode: 'no-cors',
       'Content-Type': 'application/json;charset=utf-8',
       'X-CSRF-Token': sessionToken,
     },
@@ -125,7 +125,11 @@ util.postApiData = (url, data, sessionToken) => {
   fetch(url, options)
     .then((response) => response.json())
     .then((responseData) => {
-      console.log(responseData)
+      const { success } = responseData
+      if (typeof success !== 'undefined' && typeof document !== 'undefined') {
+        // Trigger cart update.
+        document.getElementsByClassName('cart-block-refresh-button').click()
+      }
     })
     .catch((error) => {
       console.log(error)
