@@ -128,7 +128,6 @@ util.postApiData = (url, data, sessionToken) => {
         console.log(response.ok)
         if (typeof Drupal !== 'undefined') {
           Drupal.behaviors.cart.refreshCart()
-          // document.getElementsByClassName('cart-block-refresh-button').click()
         }
       }
       // response.json()
