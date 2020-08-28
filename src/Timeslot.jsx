@@ -6,11 +6,9 @@ import { Context } from './Store'
 import util from './utility'
 
 const Timeslot = (props) => {
-  console.log(props)
   const [state, dispatch] = useContext(Context)
   const { selectedBookings, formats } = state
   const { slotTimeFormat, slotTimeFieldFormat, classRoot } = formats
-  // const { timeslot } = props
   const { tid, start, end } = props
   const startObj = moment(start)
   const endObj = moment(end)

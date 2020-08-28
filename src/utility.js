@@ -116,7 +116,6 @@ util.postApiData = (url, data, sessionToken) => {
   const options = {
     method: 'POST',
     headers: {
-      // mode: 'no-cors',
       'Content-Type': 'application/json;charset=utf-8',
       'X-CSRF-Token': sessionToken,
     },
@@ -125,21 +124,12 @@ util.postApiData = (url, data, sessionToken) => {
   fetch(url, options)
     .then((response) => {
       if (response.ok === true) {
-        console.log(response.ok)
+        // console.log(response.ok)
         if (typeof Drupal !== 'undefined') {
           Drupal.behaviors.cart.refreshCart()
         }
       }
-      // response.json()
     })
-    // .then((responseData) => {
-    //   const { success } = responseData
-    //   console.log(string)
-    //   if (typeof success !== 'undefined' && typeof document !== 'undefined') {
-    //     // Trigger cart update.
-
-    //   }
-    // })
     .catch((error) => {
       console.log(error)
     })
