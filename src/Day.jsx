@@ -15,36 +15,18 @@ const Day = ({ dateObj }) => {
 
   const dayBookings = util.getBookingsForDay(dateObj, openBookings)
   const classRootMod = `${classRoot}--day`
-
-  const renderSlot = (slotTimeObj) => {
-    if (!dayBookings) return null
-    const time = slotTimeObj.format(slotTimeFieldFormat)
-    return dayBookings[time] ? (
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      <Timeslot {...dayBookings[time]} />
-    ) : (
-      <small>{slotTimeObj.format('H.mm')}</small>
-    )
-  }
-
-  const renderTimeTrack = () => {
-    if (!timeslots || timeslots.length === 0) return null
-    return (
-      <div className={`${classRoot}--day-blocks`}>
-        {timeslots.map((slot) => {
-          const slotTimeObj = dateObj
-            .clone()
-            .startOf('day')
-            .add(slot, 'minutes')
-          return (
-            <div key={slot} className={`${classRoot}--time-block`}>
-              {renderSlot(slotTimeObj)}
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
+  // console.log(dayBookings)
+  // const renderSlot = (slotTimeObj) => {
+  //   if (!dayBookings) return null
+  //   const time = slotTimeObj.format(slotTimeFieldFormat)
+  //   // return dayBookings[time] ? (
+  //   return true ? (
+  //     // eslint-disable-next-line react/jsx-props-no-spreading
+  //     <Timeslot {...dayBookings[time]} />
+  //   ) : (
+  //     <small>{slotTimeObj.format('H.mm')}</small>
+  //   )
+  // }
 
   return (
     <div className={classRootMod}>
@@ -54,7 +36,13 @@ const Day = ({ dateObj }) => {
           <span>{dateObj.format(dayTitleEndProps)} </span>
         </h5>
       </div>
-      {renderTimeTrack(dayBookings)}
+      {/* renderTimeTrack(dayBookings) */}
+      <div className={`${classRoot}--slots`}>
+        {Object.entries(dayBookings).map(([time, slotValues]) => {
+          // console.log(time, slotValues)
+          return <Timeslot key={time} {...slotValues} />
+        })}
+      </div>
     </div>
   )
 }

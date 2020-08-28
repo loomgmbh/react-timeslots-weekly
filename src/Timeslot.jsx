@@ -6,6 +6,7 @@ import { Context } from './Store'
 import util from './utility'
 
 const Timeslot = (props) => {
+  console.log(props)
   const [state, dispatch] = useContext(Context)
   const { selectedBookings, formats } = state
   const { slotTimeFormat, slotTimeFieldFormat, classRoot } = formats
